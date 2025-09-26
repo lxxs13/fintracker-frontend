@@ -9,12 +9,12 @@
 
       <p-divider align="center">
         <b>Inicia sesión</b>
-        </p-divider>
+      </p-divider>
 
       <form [formGroup]="formGroupLogin" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full">
         <div class="flex flex-col gap-1">
           <input pInputText fluid type="email" id="email" placeholder="Correo Electrónico" formControlName="email"
-            [invalid]="isInvalid('email') " />
+            [invalid]="isInvalid('email')" [disabled]="isLoginInProcess" />
 
           @if (isInvalid('email') && formGroupLogin.get('email')?.errors?.['required']) {
           <p-message severity="error" size="small" variant="simple">
@@ -31,7 +31,7 @@
 
         <div class="flex flex-col gap-1">
           <p-password fluid placeholder="Contraseña" id="password" formControlName="password" [feedback]="false"
-            autocomplete="off" [toggleMask]="true" [invalid]="isInvalid('password')" />
+            autocomplete="off" [toggleMask]="true" [invalid]="isInvalid('password')" [disabled]="isLoginInProcess" />
 
           @if (isInvalid('password') && formGroupLogin.get('password')?.errors?.['required']) {
           <p-message severity="error" size="small" variant="simple">

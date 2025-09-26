@@ -1,5 +1,5 @@
 export interface ILoginResponse {
   userFullName:   string;
-  token:      string;
+  accessToken:      string;
   expiresIn:  number;
 }

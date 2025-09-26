@@ -69,14 +69,16 @@ export class LoginPage {
       next: (response: ILoginResponse) => {
         this.formSubmitted = false;
 
-        const { userFullName, token } = response;
+        const { userFullName, accessToken } = response;
 
         localStorage.setItem('userName', userFullName);
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', accessToken);
 
-        this.isLoginInProcess = false;
+        setTimeout(() => {
+          this.isLoginInProcess = false;
 
         this._router.navigateByUrl('/dashboard')
+        }, 3000);
       },
       error: (err) => {
         console.log(err);
