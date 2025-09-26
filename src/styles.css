@@ -5,3 +5,9 @@ body {
   background-color: var(--p-surface-950);
   font-family: 'Monserrat', sans-serif;
 }
+
+p-card {
+  border: 1px solid var(--p-toolbar-border-color) !important;
+  border-radius: 6px !important;
+  height: 100% !important;
+}
