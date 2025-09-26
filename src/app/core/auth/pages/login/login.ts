@@ -12,6 +12,7 @@ import { CardModule } from 'primeng/card';
 import { AuthService } from '../../services/auth';
 import { ILoginDTO } from '../../../../models/DTOS/ILoginDTO';
 import { CommonModule } from '@angular/common';
+import { ILoginResponse } from '../../../../models/responses/ILoginResponse';
 
 @Component({
   selector: 'fintracker-login',
@@ -64,26 +65,24 @@ export class LoginPage {
       password: this.formGroupLogin.get('password')!.value,
     };
 
-    localStorage.setItem('userName', 'Luis Quiroz Schlemm');
+    this._authService.login(loginData).subscribe({
+      next: (response: ILoginResponse) => {
+        this.formSubmitted = false;
 
-    setTimeout(() => this._router.navigateByUrl('/dashboard'), 1500);
+        const { userName, token } = response;
 
-    // this._authService.login(loginData).subscribe({
-    //   next: (response: ILoginResponse) => {
-    //     this.formSubmitted = false;
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('token', token);
 
-    //     const { userName, token, role } = response;
+        this.isLoginInProcess = false;
 
-
-
-    //     this.isLoginInProcess = false;
-
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //     this.isLoginInProcess = false;
-    //   }
-    // })
+        this._router.navigateByUrl('/dashboard')
+      },
+      error: (err) => {
+        console.log(err);
+        this.isLoginInProcess = false;
+      }
+    })
   }
 
   isInvalid(controlName: string): boolean | undefined {
