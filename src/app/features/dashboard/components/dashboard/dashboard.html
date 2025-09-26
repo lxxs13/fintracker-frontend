@@ -16,25 +16,38 @@
 <div class="grid grid-cols-4 gap-2 mt-2">
   <div class="col-span-4">
     <p-card header="Disponible para gastar">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam tempore, molestiae fugiat iure debitis maxime eius. Impedit qui harum, ex ullam libero, quas accusamus eius enim quidem ipsam corporis perspiciatis!
-      Quod consequuntur omnis facere id corrupti! Sunt, quibusdam. Culpa perferendis cum eos accusamus, eius deserunt officia autem quis cupiditate est laudantium vero. Eos nisi esse obcaecati? Voluptatem nam facilis ab!
-      Voluptatem consequatur, nihil maiores possimus repellat nostrum mollitia optio ducimus natus ea cum omnis nam qui doloribus culpa commodi! Cumque tempora porro inventore fugiat a culpa accusamus debitis incidunt. Quidem?
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div class="order-2 md:order-1 flex flex-col gap-2">
+          <p-float-label class="w-full mt-3" variant="on">
+            <p-select id="periodOfTime" [options]="periodOfTime" [(ngModel)]="periodSelected" optionLabel="title"
+              optionValue="id" fluid />
+            <label for="periodOfTime">Periodo</label>
+          </p-float-label>
+
+          <p-divider />
+
+          <div class="">
+            <p class="text-lg">Balance actual: {{ currentBalance | currency}}</p>
+          <p class="text-lg">Balance proyectado: {{ currentBalance | currency}}</p>
+          <p class="text-lg">Gastos proyectados: {{ 0 | currency}}</p>
+          </div>
+        </div>
+
+        <div class="order-1 md:order-2">
+
+        </div>
+      </div>
     </p-card>
   </div>
 
   <div class="md:col-span-2 col-span-4">
     <p-card header="Este mes">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse sit eaque, ratione, aliquam est consequuntur optio nostrum dolores eveniet dicta odit adipisci, nobis earum mollitia officiis accusantium vel animi sed?
-      Amet, aliquid est ducimus pariatur molestiae illum repellat adipisci asperiores dolor blanditiis reprehenderit enim! Voluptatum dicta dolorum deleniti, esse nam neque eveniet. Aperiam deleniti repudiandae doloribus voluptates enim eaque voluptate?
+
     </p-card>
   </div>
 
   <div class="md:col-span-2 col-span-4">
     <p-card header="Próximo">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, aspernatur? Dolorum, repellendus consequuntur? Laudantium labore culpa sapiente voluptate error quas, velit deleniti temporibus quod, praesentium, vel a ut tenetur totam?
-      At eveniet rem nobis a odio, ipsum esse iste veritatis dolores laborum fugiat mollitia doloremque hic natus assumenda veniam in dicta sequi, incidunt iure vel temporibus cum? Cupiditate, dignissimos veniam.
-
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem quia impedit accusamus tempora id fugit officia optio, excepturi qui! Voluptates possimus laudantium porro ex quam accusamus laborum voluptatem officia rerum.
 
     </p-card>
   </div>
