@@ -69,9 +69,9 @@ export class LoginPage {
       next: (response: ILoginResponse) => {
         this.formSubmitted = false;
 
-        const { userName, token } = response;
+        const { userFullName, token } = response;
 
-        localStorage.setItem('userName', userName);
+        localStorage.setItem('userName', userFullName);
         localStorage.setItem('token', token);
 
         this.isLoginInProcess = false;

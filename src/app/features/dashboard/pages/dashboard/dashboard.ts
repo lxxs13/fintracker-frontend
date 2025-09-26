@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { DashboardComponent } from '../../components/dashboard/dashboard';
 
 @Component({
   selector: 'fintracker-dashboard',
-  imports: [],
+  imports: [
+    DashboardComponent
+  ],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
 })
 export class DashboardPage {
 
