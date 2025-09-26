@@ -1,1 +1,71 @@
-<p>add-edit-card-account works!</p>
+<div class="flex flex-col gap-4 w-full">
+  <p-float-label variant="on" class="mt-2">
+    <p-inputnumber [(ngModel)]="balance" inputId="balnce_input" mode="currency" currency="USD" locale="en-US"
+      placeholder="0.00" autocomplete="off" pSize="large" fluid />
+    <label for="balance_input">Balance</label>
+  </p-float-label>
+
+  <p-float-label variant="on">
+    <input pInputText id="description" [(ngModel)]="description" autocomplete="off" fluid />
+    <label for="description">Descripción</label>
+  </p-float-label>
+
+  @if (type === 0) {
+  <p-float-label variant="on">
+    <p-select id="accountType_label" [options]="accountsType" [(ngModel)]="selectedAccountType" optionLabel="name"
+      optionValue="id" placeholder="Tipo" fluid appendTo="body" />
+    <label for="accountType_label">Tipo</label>
+  </p-float-label>
+  }
+
+  @if (type === 1) {
+  <p-float-label variant="on">
+    <p-inputnumber id="creditCardLimit" [(ngModel)]="creditCardLimit" autocomplete="off" fluid />
+    <label for="creditCardLimit">Límite de crédito</label>
+  </p-float-label>
+
+  <p-float-label variant="on">
+    <p-inputnumber id="APR" [(ngModel)]="APR" autocomplete="off" fluid prefix="%" />
+    <label for="APR">Tasa de Interés Anual</label>
+  </p-float-label>
+
+  <div class="flex flex-row w-full gap-4">
+    <p-float-label class="w-full" variant="on">
+      <p-inputnumber id="statementCloseDay" [(ngModel)]="statementCloseDay" autocomplete="off" fluid mode="decimal"
+        [min]="1" [max]="28" [showButtons]="true" buttonLayout="horizontal">
+        <ng-template #incrementbuttonicon>
+          <span class="pi pi-plus"></span>
+        </ng-template>
+
+        <ng-template #decrementbuttonicon>
+          <span class="pi pi-minus"></span>
+        </ng-template>
+      </p-inputnumber>
+
+      <label for="statementCloseDay">Día de corte</label>
+    </p-float-label>
+
+    <p-float-label class="w-full" variant="on">
+      <p-inputnumber id="paymentDueDay" [(ngModel)]="paymentDueDay" autocomplete="off" fluid mode="decimal" [min]="1"
+        [max]="28" [showButtons]="true" buttonLayout="horizontal">
+        <ng-template #incrementbuttonicon>
+          <span class="pi pi-plus"></span>
+        </ng-template>
+
+        <ng-template #decrementbuttonicon>
+          <span class="pi pi-minus"></span>
+        </ng-template>
+      </p-inputnumber>
+      <label for="paymentDueDay">Día de Pago</label>
+    </p-float-label>
+  </div>
+  }
+
+</div>
+
+<p-divider />
+
+<div class="flex justify-end gap-4">
+  <button pButton label="Cancelar" severity="secondary"></button>
+  <button pButton label="Guardar" severity="primary" (click)="saveChanges()"></button>
+</div>

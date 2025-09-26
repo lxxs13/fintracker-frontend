@@ -1,1 +1,56 @@
-<p>account works!</p>
+<p-card>
+  <div class="flex flex-row justify-between items-center w-full">
+    <h1 class="text-4xl font-semibold">Cuentas</h1>
+    <button pButton icon="pi pi-plus" (click)="show('Agregar', selectedTab)">
+      Agregar {{ selectedTab === 0 ? 'cuenta de débito' : 'tarjeta de crédito' }}
+    </button>
+  </div>
+
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0" (click)="selectedTab = 0">Cuentas de débito</p-tab>
+      <p-tab value="1" (click)="selectedTab = 1">Tarjetas de crédito</p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <div class="flex flex-col gap-4">
+          @for (item of remappedList; track $index) {
+          <p-card>
+            <ng-template #title>
+              <div class="flex flex-row justify-between w-ful">
+                <span>{{ item.type }}</span>
+                <span>{{ remappedList[$index].totalBalance | currency }}</span>
+              </div>
+            </ng-template>
+
+            <p-divider/>
+
+            @for (item of remappedList[$index].accounts; track $index) {
+              <div class="flex flex-row justify-between">
+                <p>{{ item.accountName }}</p>
+                <p>{{ item.balance | currency }}</p>
+              </div>
+            }
+          </p-card>
+          }
+        </div>
+
+        <p-divider/>
+
+        <div class="flex justify-end">
+          <p class="p-card-title"> Balance total: {{ balanceTotal | currency }} </p>
+        </div>
+      </p-tabpanel>
+
+      <p-tabpanel value="1">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolore, aspernatur voluptatibus alias ad eum quia ex tenetur perferendis culpa reprehenderit? Nobis ea a doloribus necessitatibus ex aperiam animi quas tempora.
+        Officia repellendus voluptatem delectus maxime expedita natus quas inventore quisquam? Odio tenetur id reiciendis commodi nisi harum iure voluptate, rerum perferendis autem repellendus deleniti maxime ex doloremque pariatur sed debitis!
+        Cum, dolorem veritatis aperiam sit vero atque doloribus, laudantium natus commodi animi voluptatibus. Provident magni eos ipsam, amet, itaque dignissimos accusantium ad mollitia iusto corrupti perspiciatis excepturi nobis! Ea, harum.
+        Qui culpa ipsa ab nesciunt aperiam saepe in beatae quas repellat, quam sequi neque, expedita libero laborum pariatur nisi sint reiciendis, possimus minus excepturi itaque soluta corporis exercitationem consequatur! Harum!
+      </p-tabpanel>
+    </p-tabpanels>
+
+  </p-tabs>
+
+</p-card>
