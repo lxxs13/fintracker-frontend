@@ -1,0 +1,51 @@
+<div class="flex justify-center !w-full">
+
+  <p-tabs [value]="tabIndexSelected" class="w-full">
+    <p-tablist>
+      <p-tab [value]="0" (click)="tabIndexSelected = 0">Tipo de transacción</p-tab>
+      <p-tab [value]="1" (click)="tabIndexSelected = 1" [disabled]="!value">Detalles de la transacción</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel [value]="0">
+        <p-selectbutton class="flex flex-col gap-2 w-full" size="large" [options]="stateOptions" [(ngModel)]="value"
+          optionLabel="label" optionValue="value" aria-labelledby="basic">
+          <ng-template pTemplate="item" let-option>
+            <div class="w-full flex flex-row gap-4 items-center justify-start">
+              <i [class]="'pi ' + option.icon"></i>
+
+              <div class="flex flex-col justify-start items-start gap-1">
+                <span class="text-lg">{{ option.label }}</span>
+                <span class="text-xs">{{ option.desc }}</span>
+              </div>
+
+            </div>
+          </ng-template>
+        </p-selectbutton>
+      </p-tabpanel>
+
+      <p-tabpanel [value]="1">
+        <fintracker-transaction-detail [title]="value"/>
+      </p-tabpanel>
+
+    </p-tabpanels>
+
+    <p-divider />
+
+    <div class="flex justify-end gap-4">
+      <button pButton severity="secondary" (click)="goBack()">
+        @if (tabIndexSelected === 0) {
+        <span>Cancelar</span>
+        } @else if (tabIndexSelected === 1) {
+        <span>Regresar</span>
+        }
+      </button>
+      <button pButton severity="primary" (click)="nextStep()" [disabled]="!value">
+        @if (tabIndexSelected === 0) {
+        <span>Siguiente</span>
+        } @else if (tabIndexSelected === 1) {
+        <span>Guardar</span>
+        }
+      </button>
+    </div>
+  </p-tabs>
+</div>
