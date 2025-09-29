@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { TransactionType } from '../../dialogs/transaction-type/transaction-type';
+import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
@@ -14,12 +14,16 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
   styleUrl: './transaction.css',
   providers: [DialogService]
 })
-export class Transaction {
+export class Transaction implements OnDestroy {
   private _dialogService = inject(DialogService);
   dialogRef: DynamicDialogRef | undefined;
 
+  ngOnDestroy(): void {
+
+  }
+
   showDialog() {
-    this.dialogRef = this._dialogService.open(TransactionType, {
+    this.dialogRef = this._dialogService.open(TransactionTypeComponent, {
           modal: true,
           closable: true,
           maximizable: true,

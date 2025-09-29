@@ -1,12 +1,22 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { DatePickerModule } from 'primeng/datepicker';
+import { EditorModule } from 'primeng/editor';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule, NgModel } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { SelectModule } from 'primeng/select';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TabsModule } from 'primeng/tabs';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { TransactionDetailComponent } from "../../components/transaction-detail/transaction-detail";
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { TransactionService } from '../../services/transaction';
+import { CategoriesService } from '../../../settings/services/categories';
+import { ICategories, ICategoriesListResponse } from '../../../../models/responses/ICategoriesListResponse';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { ITransactionDTO } from '../../../../models/DTOS/ITransactionDTO';
+import { AccountService } from '../../../accounts/services/account';
 
 @Component({
   selector: 'fintracker-transaction-type',
@@ -16,15 +26,33 @@ import { TransactionDetailComponent } from "../../components/transaction-detail/
     ButtonModule,
     TabsModule,
     DividerModule,
-    ScrollPanelModule,
-    TransactionDetailComponent
-],
+    FloatLabelModule,
+    DatePickerModule,
+    SelectModule,
+    EditorModule,
+    InputNumberModule,
+    InputTextModule,
+    CommonModule,
+  ],
   templateUrl: './transaction-type.html',
   styleUrl: './transaction-type.css',
   providers: [DialogService]
 })
-export class TransactionType {
+export class TransactionTypeComponent implements OnInit {
   private _dialogService = inject(DynamicDialogRef);
+  private _transtactionService = inject(TransactionService);
+  private _categoryService = inject(CategoriesService);
+  private _accountsService = inject(AccountService);
+
+  balance: number | undefined;
+  spentDate: Date | undefined;
+
+  categoriesIncomesList: ICategories[] = [];
+  categoriesSpendList: ICategories[] = [];
+
+  selectedCategory: ICategories | undefined;
+
+  notes: string = '';
 
   stateOptions: any[] = [
     { icon: 'pi-shopping-cart', label: 'Gasto', value: 'spent', desc: 'Registra una compra o un pago que hiciste, como supermercado, gasolina o restaurante.' },
@@ -41,9 +69,48 @@ export class TransactionType {
   dialogRef: DynamicDialogRef | undefined;
 
   value: string = '';
+  desc: string = '';
+
+  ngOnInit(): void {
+    this._categoryService.GetCategoriesByUserId().subscribe({
+      next: (response: ICategoriesListResponse) => {
+        const { categoriesIncome, categoriesSpent } = response;
+        this.categoriesIncomesList = categoriesIncome;
+        this.categoriesSpendList = categoriesSpent;
+      }
+    });
+
+    this._accountsService.GetDebitCardsByUser().subscribe({
+      next: (response) => {
+        console.log(response)
+      }
+    })
+  }
+
+  categoryTypeList(): boolean {
+    const allowed = ['spent', 'payment', 'purshaseMonthly'];
+    return allowed.includes('spend'); // true si está, false si no
+  }
+
 
   saveChanges(): void {
+    const body: ITransactionDTO = {
+      balance: this.balance!,
+      notes: this.notes,
+      transactionDate: this.spentDate!,
+      description: this.desc,
+      categoryId: this.selectedCategory?._id!,
+    };
 
+    this._transtactionService.CreateTransaction(body).subscribe({
+      next: (response) => {
+        console.log(response);
+
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
   }
 
   nextStep(): void {

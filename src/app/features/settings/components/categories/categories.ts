@@ -38,13 +38,13 @@ export class CategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this._categoryService.GetCategoriesByUserId().subscribe({
-      next: ((response: ICategoriesListResponse) => {
-        const { categoriesSpent, categoriesIncome } = response;
+      // next: ((response: ICategoriesListResponse) => {
+      //   const { categoriesSpent, categoriesIncome } = response;
 
-        this.spentList = categoriesSpent;
-        this.incomesList = categoriesIncome;
-      }),
-      error: (err) => console.error(err)
+      //   this.spentList = categoriesSpent;
+      //   this.incomesList = categoriesIncome;
+      // }),
+      // error: (err) => console.error(err)
     })
   }
 
