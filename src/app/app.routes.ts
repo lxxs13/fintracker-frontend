@@ -34,6 +34,12 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadComponent: () => import('./features/settings/pages/settings/settings').then(c => c.SettingsPage),
+        children: [
+          {
+            path: 'categories',
+            loadComponent: () => import ('./features/settings/components/categories/categories').then(c => c.CategoriesComponent)
+          }
+        ]
       }
     ]
   }

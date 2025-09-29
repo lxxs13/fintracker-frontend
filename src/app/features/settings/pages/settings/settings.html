@@ -1,1 +1,9 @@
-<p>settings works!</p>
+<div class="flex flex-row gap-4">
+  <div class="w-72">
+    <p-tieredmenu [model]="items" />
+  </div>
+
+  <div class="flex-1 overflow-auto">
+    <router-outlet/>
+  </div>
+</div>
