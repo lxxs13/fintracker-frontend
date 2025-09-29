@@ -1,0 +1,45 @@
+<p-card>
+  <h1 class="text-4xl font-semibold">Categorías</h1>
+
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0" (click)="selectedIndexTab = 0" class="w-[50%]">Gastos</p-tab>
+      <p-tab value="1" (click)="selectedIndexTab = 1" class="w-[50%]">Ingresos</p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <p-selectbutton [options]="spentList" [(ngModel)]="selectedSpend" optionLabel="categoryName"
+          optionValue="categoryName" size="large" class="flex flex-col gap-2 w-full">
+
+          <ng-template pTemplate="item" let-item>
+            <div class="flex items-center gap-2 w-full">
+              <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.iconColor | iconColorClass">
+                {{ item.iconLabel }}
+              </span>
+
+              <span class="text-left">{{ item.categoryName }}</span>
+            </div>
+          </ng-template>
+        </p-selectbutton>
+      </p-tabpanel>
+
+      <p-tabpanel value="1">
+        <p-selectbutton [options]="incomesList" [(ngModel)]="selectedIncome" optionLabel="categoryName"
+          optionValue="categoryName" size="large" class="flex flex-col gap-2 w-full">
+
+          <ng-template pTemplate="item" let-item>
+            <div class="flex items-center gap-2 w-full">
+              <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.iconColor | iconColorClass">
+                {{ item.iconLabel }}
+              </span>
+
+              <span class="text-left">{{ item.categoryName }}</span>
+            </div>
+          </ng-template>
+        </p-selectbutton>
+      </p-tabpanel>
+    </p-tabpanels>
+
+  </p-tabs>
+</p-card>
