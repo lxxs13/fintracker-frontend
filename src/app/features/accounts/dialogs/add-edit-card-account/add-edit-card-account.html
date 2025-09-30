@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-4 w-full">
   <p-float-label variant="on" class="mt-2">
-    <p-inputnumber [(ngModel)]="balance" inputId="balnce_input" mode="currency" currency="USD" locale="en-US"
+    <p-inputnumber [(ngModel)]="balance" inputId="balance_input" mode="currency" currency="USD" locale="en-US"
       placeholder="0.00" autocomplete="off" pSize="large" fluid />
     <label for="balance_input">Balance</label>
   </p-float-label>
@@ -19,13 +19,33 @@
   }
 
   @if (type === 1) {
-  <p-float-label variant="on">
-    <p-inputnumber id="creditCardLimit" [(ngModel)]="creditCardLimit" autocomplete="off" fluid />
-    <label for="creditCardLimit">Límite de crédito</label>
-  </p-float-label>
+  <div class="flex flex-row gap-4 items-end">
+    <p-float-label variant="on" class="w-full">
+      <p-inputnumber id="creditCardLimit" [(ngModel)]="creditCardLimit" autocomplete="off" fluid mode="currency"
+        currency="USD" locale="en-US" placeholder="0.00" />
+      <label for="creditCardLimit">Límite de crédito</label>
+    </p-float-label>
+
+    <p-divider layout="vertical" />
+
+    <div class="flex flex-col gap-4 justify-center">
+      <!-- <p>Últimos 4 dígitos </p> -->
+      <p-float-label variant="on">
+
+        <p-inputotp id="input_last_four" size="large" [integerOnly]="true" [(ngModel)]="lastDigits">
+          <ng-template #input let-token let-events="events">
+            <input class="custom-otp-input" (input)="events.input($event)" (keydown)="events.keydown($event)"
+              type="text" [attr.value]="token" [maxLength]="1" />
+          </ng-template>
+        </p-inputotp>
+        <!-- <label for="input_last_four">Últimos 4 dígitos</label> -->
+      </p-float-label>
+
+    </div>
+  </div>
 
   <p-float-label variant="on">
-    <p-inputnumber id="APR" [(ngModel)]="APR" autocomplete="off" fluid prefix="%" />
+    <p-inputnumber id="APR" [(ngModel)]="APR" autocomplete="off" fluid suffix="%" [minlength]="1" [maxlength]="3" />
     <label for="APR">Tasa de Interés Anual</label>
   </p-float-label>
 

@@ -1,13 +1,25 @@
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
 
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+html {
+  -ms-overflow-style: none;
+}
+
 body {
   background-color: var(--p-surface-950);
   font-family: 'Monserrat', sans-serif;
 }
 
 p-card {
-  border: 1px solid var(--p-toolbar-border-color) !important;
+  border: 1px solid var(--p-toolbar-border-color, #334155) !important;
   border-radius: 6px !important;
   height: 100% !important;
 }
@@ -19,3 +31,15 @@ p-card {
   'GRAD' 0,
   'opsz' 24
 }
+
+.p-toast-message-success .p-toast-detail {
+  color: #fff !important;
+}
+
+.pb-state-low  .p-progressbar { background-color: #dcfce7; }
+.pb-state-mid  .p-progressbar { background-color: #fef9c3; }
+.pb-state-high .p-progressbar { background-color: #fee2e2; }
+
+.pb-state-low  .p-progressbar .p-progressbar-value { background-color: #22c55e; }
+.pb-state-mid  .p-progressbar .p-progressbar-value { background-color: #eab308; }
+.pb-state-high .p-progressbar .p-progressbar-value { background-color: #ef4444; }
