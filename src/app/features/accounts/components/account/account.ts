@@ -1,24 +1,28 @@
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
-import { TabsModule } from 'primeng/tabs'
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog'
+import { TabsModule } from 'primeng/tabs';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { AccountService } from '../../services/account';
-import { IDebitAccountsResponse } from '../../../../models/responses/IDebitAccountsResponse';
+import { IAccount, IAccountsListResponse } from '../../../../models/responses/IDebitAccountsResponse';
 import { EAccountType, EAccountTypeMapperText, IDebitAccountGroup } from '../../../../enums/AccountTypes';
 import { AddEditCardAccountComponent } from '../../dialogs/add-edit-card-account/add-edit-card-account';
+import { CommonService } from '../../../../shared/services/common';
 
 @Component({
   selector: 'fintracker-account-component',
   imports: [
+    CommonModule,
     CardModule,
     DividerModule,
     TabsModule,
     ButtonModule,
+    ProgressBarModule,
     CurrencyPipe,
-  ],
+],
   templateUrl: './account.html',
   providers: [
     DialogService
@@ -27,23 +31,33 @@ import { AddEditCardAccountComponent } from '../../dialogs/add-edit-card-account
 export class AccountComponent implements OnInit {
   private _dialogService = inject(DialogService);
   private _accountService = inject(AccountService);
+  private _commonService = inject(CommonService);
 
   selectedTab: number = 0;
-  balanceTotal: number = 0;
+  accountsBalanceTotal: number = 0;
+  creditCardsBalance: number = 0;
 
   dialogRef: DynamicDialogRef | undefined;
 
-  remappedList: IDebitAccountGroup[] = [];
+  remappedAccountsList: IDebitAccountGroup[] = [];
+  remappedCreditList: IAccount[] = [];
 
   ngOnInit(): void {
     this.getDebitsCard();
   }
 
   getDebitsCard(): void {
-    this.remappedList = [];
+    this.remappedAccountsList = [];
     this._accountService.GetDebitCardsByUser().subscribe({
-      next: (response: IDebitAccountsResponse[]) => {
-        const result = Object.groupBy(response, ({ accountType }) => accountType);
+      next: (response: IAccountsListResponse) => {
+        const { debitAccounts, creditAccounts } = response;
+
+        const balanceCreditCards = creditAccounts.reduce((sum, creditAccounts) => sum + creditAccounts.currentBalance, 0);
+        this.creditCardsBalance = balanceCreditCards;
+
+        this.remappedCreditList = creditAccounts;
+
+        const result = Object.groupBy(debitAccounts, ({ accountType }) => accountType);
 
         for (const key in result) {
           const typedKey = Number(key) as EAccountType;
@@ -51,11 +65,11 @@ export class AccountComponent implements OnInit {
           const accounts = result[key];
 
           if (mappedKey && accounts) {
-            const totalBalance = accounts.reduce((sum, accounts) => sum + accounts.balance, 0);
+            const totalBalance = accounts.reduce((sum, accounts) => sum + accounts.currentBalance, 0);
 
-            this.balanceTotal += totalBalance;
+            this.accountsBalanceTotal += totalBalance;
 
-            this.remappedList.push({
+            this.remappedAccountsList.push({
               type: mappedKey,
               accounts,
               totalBalance,
@@ -83,8 +97,25 @@ export class AccountComponent implements OnInit {
     });
 
     this.dialogRef.onClose.subscribe((response) => {
-      if (response) this.getDebitsCard();
+      if (response) {
+        this._commonService.showMessage('Cuenta creada con éxito', 'La cuenta de débito se ha agregado correctamente', 'ok');
+
+        this.getDebitsCard();
+      }
     })
+  }
+
+  getProgessValue(currentBalance: number, creditLimitCard: number) {
+    //FIX: se recalcula en cada cambio del front
+    return Math.round((currentBalance * 100) / creditLimitCard);
+  }
+
+  styleVars(card: IAccount) {
+    const percentage = this.getProgessValue(card.currentBalance, card.card?.creditCardLimit!);
+
+    if (percentage < 50) return { '--p-progressbar-value-background': 'oklch(72.3% 0.219 149.579)', '--p-progressbar-background': 'oklch(92.5% 0.084 155.995 / 0.2' };
+    if (percentage < 80) return { '--p-progressbar-value-background': 'oklch(79.5% 0.184 86.047)', '--p-progressbar-background': 'oklch(94.5% 0.129 101.54 / 0.2)' };
+    return { '--p-progressbar-value-background': 'oklch(63.7% 0.237 25.331)', '--p-progressbar-background': 'oklch(88.5% 0.062 18.334 / 0.2)' };
   }
 
 }

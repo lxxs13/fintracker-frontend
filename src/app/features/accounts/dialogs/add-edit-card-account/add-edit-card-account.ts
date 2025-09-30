@@ -4,22 +4,28 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputNumberModule } from 'primeng/inputnumber'
 import { InputTextModule } from 'primeng/inputtext';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectModule } from 'primeng/select'
 import { FloatLabelModule } from 'primeng/floatlabel'
-import { IDebitAccountDTO } from '../../../../models/DTOS/ICardDTO';
+import { InputOtpModule } from 'primeng/inputotp';
+import { ICreditAccountDTO, IDebitAccountDTO } from '../../../../models/DTOS/ICardDTO';
 import { AccountService } from '../../services/account';
-import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CommonModule } from '@angular/common';
+import { EAccountType } from '../../../../enums/AccountTypes';
 
 @Component({
   selector: 'fintracker-add-edit-card-account',
   imports: [
     FormsModule,
+    CommonModule,
     InputTextModule,
     InputNumberModule,
     DividerModule,
     ButtonModule,
     SelectModule,
     FloatLabelModule,
+    InputNumberModule,
+    InputOtpModule,
   ],
   templateUrl: './add-edit-card-account.html',
   styleUrl: './add-edit-card-account.css',
@@ -64,7 +70,31 @@ export class AddEditCardAccountComponent implements OnInit {
   }
 
   saveChanges(): void {
-    if(this.type === 0) this.saveDebitCard();
+    if (this.type === 0) this.saveDebitCard();
+    if (this.type === 1) this.saveCreditCard();
+  }
+
+  saveCreditCard(): void {
+    const body: ICreditAccountDTO = {
+      balance: this.balance ?? 0,
+      description: this.description,
+      accountType: EAccountType.CREDITO,
+      lastDigits: +this.lastDigits!,
+      APR: this.APR!,
+      limitCreditCard: this.creditCardLimit!,
+      paymentDay: this.paymentDueDay!,
+      statementCloseDay: this.statementCloseDay!,
+    };
+
+    this._accountService.CreateCreditCard(body).subscribe({
+      next: (response) => {
+        console.log(response);
+        this._dialogService.close(true);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
   saveDebitCard(): void {

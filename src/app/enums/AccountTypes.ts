@@ -1,4 +1,4 @@
-import { IDebitAccountsResponse } from "../models/responses/IDebitAccountsResponse";
+import { IAccount } from "../models/responses/IDebitAccountsResponse";
 
 export enum EAccountType {
     EFECTIVO = 1,
@@ -10,7 +10,7 @@ export enum EAccountType {
 export interface IDebitAccountGroup {
   type: string;
   totalBalance: number;
-  accounts: IDebitAccountsResponse[];
+  accounts: IAccount[];
 }
 
 export const EAccountTypeMapperText: Record<EAccountType, string> = {

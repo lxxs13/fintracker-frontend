@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IDebitAccountsResponse } from '../../../models/responses/IDebitAccountsResponse';
-import { IDebitAccountDTO } from '../../../models/DTOS/ICardDTO';
+import { IAccountsListResponse } from '../../../models/responses/IDebitAccountsResponse';
+import { ICreditAccountDTO, IDebitAccountDTO } from '../../../models/DTOS/ICardDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +10,16 @@ import { IDebitAccountDTO } from '../../../models/DTOS/ICardDTO';
 export class AccountService {
   private _http = inject(HttpClient);
 
-  GetDebitCardsByUser(): Observable<IDebitAccountsResponse[]> {
-    return this._http.get<IDebitAccountsResponse[]>('/account');
+  GetDebitCardsByUser(): Observable<IAccountsListResponse> {
+    return this._http.get<IAccountsListResponse>('/account');
   }
 
   CreateDebitCard(body: IDebitAccountDTO): Observable<boolean> {
-    return this._http.post<boolean>('/account', body);
+    return this._http.post<boolean>('/account/debit', body);
+  }
+
+  CreateCreditCard(body: ICreditAccountDTO): Observable<boolean> {
+    return this._http.post<boolean>('/account/credit', body);
   }
 
 }
