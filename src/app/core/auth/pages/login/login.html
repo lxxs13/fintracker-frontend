@@ -3,8 +3,9 @@
   bg-no-repeat bg-size-[35vw] sm:md:lg:bg-bottom-left bg-top mt-32 opacity-40 z-0 pointer-events-none">
   </div>
 
-  <p-card class="!h-min">
-    <div class="flex flex-col bg-[var(--p-surface-900)] border-0 rounded-xl p-4 w-[30rem] m-2 gap-2">
+  <p-card class="!h-min !bg-transparent !border-none !shadow-none">
+    <div class="w-[30rem] flex flex-col justify-center items-center overflow-hidden
+    rounded-2xl p-6 bg-white/10 backdrop-blur-xs ring-1 ring-white/15">
       <h1 class="text-4xl text-center">Fin Tracker</h1>
 
       <p-divider align="center">
@@ -14,7 +15,7 @@
       <form [formGroup]="formGroupLogin" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full">
         <div class="flex flex-col gap-1">
           <input pInputText fluid type="email" id="email" placeholder="Correo Electrónico" formControlName="email"
-            [invalid]="isInvalid('email')" [disabled]="isLoginInProcess" />
+            [invalid]="isInvalid('email')" />
 
           @if (isInvalid('email') && formGroupLogin.get('email')?.errors?.['required']) {
           <p-message severity="error" size="small" variant="simple">
@@ -31,7 +32,7 @@
 
         <div class="flex flex-col gap-1">
           <p-password fluid placeholder="Contraseña" id="password" formControlName="password" [feedback]="false"
-            autocomplete="off" [toggleMask]="true" [invalid]="isInvalid('password')" [disabled]="isLoginInProcess" />
+            autocomplete="off" [toggleMask]="true" [invalid]="isInvalid('password')" />
 
           @if (isInvalid('password') && formGroupLogin.get('password')?.errors?.['required']) {
           <p-message severity="error" size="small" variant="simple">
@@ -43,6 +44,12 @@
           <span pButtonLabel>{{ isLoginInProcess ? 'Validando Datos. Por favor, espere...' : "Ingresar" }}</span>
         </button>
       </form>
+
+      @if (showLoginError) {
+      <p-message severity="error" class="pt-4 w-full">
+        <p class="text-center">{{ errorMessage }}</p>
+      </p-message>
+      }
     </div>
   </p-card>
 </div>
