@@ -39,6 +39,9 @@ export class LoginPage {
 
   formSubmitted = false;
   isLoginInProcess: boolean = false;
+  showLoginError: boolean = false;
+
+  errorMessage: string = '';
 
   ngOnInit(): void {
     this.formGroupLogin = this._formBuilder.group({
@@ -48,9 +51,11 @@ export class LoginPage {
   }
 
   onSubmit(): void {
+    this.showLoginError = false;
     this.isLoginInProcess = true;
     this.formSubmitted = true;
     this.formGroupLogin.clearValidators();
+    this.formGroupLogin.disable();
 
     if (this.formGroupLogin.invalid) {
       this.formGroupLogin.markAllAsDirty();
@@ -77,11 +82,15 @@ export class LoginPage {
         setTimeout(() => {
           this.isLoginInProcess = false;
 
-        this._router.navigateByUrl('/dashboard')
+          this._router.navigateByUrl('/dashboard')
         }, 3000);
       },
       error: (err) => {
         console.log(err);
+
+        this.errorMessage = err.error.message;
+        this.showLoginError = true;
+        this.formGroupLogin.enable();
         this.isLoginInProcess = false;
       }
     })
