@@ -1,5 +1,4 @@
 <div class="flex justify-center !w-full">
-
   <p-tabs [value]="tabIndexSelected" class="w-full">
     <p-tablist>
       <p-tab [value]="0" (click)="tabIndexSelected = 0" class="w-[50%]">Tipo de transacción</p-tab>
@@ -8,7 +7,7 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel [value]="0">
-        <p-selectbutton class="flex flex-col gap-2 w-full" size="large" [options]="stateOptions" [(ngModel)]="value"
+        <p-selectbutton class="flex flex-col gap-2 w-full" size="large" [options]="transactionTypes" [(ngModel)]="value"
           optionLabel="label" optionValue="value" aria-labelledby="basic">
           <ng-template pTemplate="item" let-option>
             <div class="w-full flex flex-row gap-4 items-center justify-start">
@@ -33,7 +32,7 @@
           </p-float-label>
 
           <p-float-label variant="on" class="mt-2">
-            <input pInputText fluid id="input_description" pSize="large" [(ngModel)]="desc" />
+            <input pInputText fluid id="input_description" pSize="large" [(ngModel)]="desc" [autocomplete]="false" />
             <label for="input_description">Descripción</label>
           </p-float-label>
 
@@ -42,28 +41,21 @@
             <label for="input_transaction_date">Fecha de transacción</label>
           </p-float-label>
 
-          <!-- <p-float-label variant="on" class="mt-2">
-            <p-select id="input_selected_category"
-              [options]="" size="large"
-              [(ngModel)]="selectedCategory" optionLabel="categoryName" fluid appendTo="body">
-              <ng-template pTemplate="item" let-item>
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined"
-                    [ngClass]="['rounded-md', 'p-2', 'bg-' + item.iconColor + '/10', 'text-' + item.iconColor + '/90']">
-                    {{ item.iconLabel }}
-                  </span>
-
-                  <span>{{ item.categoryName }}</span>
+          <p-float-label variant="on" class="mt-2">
+            <p-select id="input_account" [options]="accountsGroup" [(ngModel)]="selectedAccount" [group]="true" size="large" fluid>
+              <ng-template let-group #group>
+                <div class="flex items-center">
+                  <span>{{ group.label }}</span>
                 </div>
               </ng-template>
             </p-select>
+            <label for="input_account">Seleccione cuenta</label>
 
-           <label for="input_selected_category">Categoría</label>
-          </p-float-label> -->
+          </p-float-label>
 
           <p-float-label variant="on" class="mt-2">
             <p-select id="input_selected_category"
-              [options]="categoryTypeList() ? categoriesSpendList : categoriesIncomesList" size="large"
+              [options]="!categoryTypeList() ? categoriesSpendList : categoriesIncomesList" size="large"
               [(ngModel)]="selectedCategory" optionLabel="categoryName" fluid appendTo="body">
               <ng-template pTemplate="item" let-item>
                 <div class="flex items-center gap-2">
@@ -80,33 +72,28 @@
             <label for="input_selected_category">Categoría</label>
           </p-float-label>
 
-          <div class="flex flex-col gap-4">
-            <p class="text-2xl">Notas</p>
+          <p-float-label variant="on">
+            <textarea id="input_descripcion" rows="3" cols="30" pTextarea [(ngModel)]="notes" fluid></textarea>
+            <label for="input_descripcion">Notas</label>
+          </p-float-label>
 
-            <p-editor [(ngModel)]="notes" [style]="{ height: '150px' }" />
-          </div>
         </div>
       </p-tabpanel>
-
     </p-tabpanels>
 
-    <p-divider />
+    <div class="sticky bottom-0 z-20 px-4 py-3 bg-[var(--p-surface-0)]/90 backdrop-blur-md
+      border-t border-[var(--p-content-border-color)]">
+      <div class="flex justify-end gap-4">
+        <button pButton severity="secondary" (click)="goBack()">
+          @if (tabIndexSelected === 0) { <span>Cancelar</span> }
+          @else if (tabIndexSelected === 1) { <span>Regresar</span> }
+        </button>
 
-    <div class="flex justify-end gap-4">
-      <button pButton severity="secondary" (click)="goBack()">
-        @if (tabIndexSelected === 0) {
-        <span>Cancelar</span>
-        } @else if (tabIndexSelected === 1) {
-        <span>Regresar</span>
-        }
-      </button>
-      <button pButton severity="primary" (click)="nextStep()" [disabled]="!value">
-        @if (tabIndexSelected === 0) {
-        <span>Siguiente</span>
-        } @else if (tabIndexSelected === 1) {
-        <span>Guardar</span>
-        }
-      </button>
+        <button pButton severity="primary" (click)="nextStep()" [disabled]="!value">
+          @if (tabIndexSelected === 0) { <span>Siguiente</span> }
+          @else if (tabIndexSelected === 1) { <span>Guardar</span> }
+        </button>
+      </div>
     </div>
   </p-tabs>
 </div>

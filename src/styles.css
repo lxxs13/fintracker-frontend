@@ -26,20 +26,36 @@ p-card {
 
 .material-symbols-outlined {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 300,
-  'GRAD' 0,
-  'opsz' 24
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24
 }
 
 .p-toast-message-success .p-toast-detail {
   color: #fff !important;
 }
 
-.pb-state-low  .p-progressbar { background-color: #dcfce7; }
-.pb-state-mid  .p-progressbar { background-color: #fef9c3; }
-.pb-state-high .p-progressbar { background-color: #fee2e2; }
+.pb-state-low .p-progressbar {
+  background-color: #dcfce7;
+}
 
-.pb-state-low  .p-progressbar .p-progressbar-value { background-color: #22c55e; }
-.pb-state-mid  .p-progressbar .p-progressbar-value { background-color: #eab308; }
-.pb-state-high .p-progressbar .p-progressbar-value { background-color: #ef4444; }
+.pb-state-mid .p-progressbar {
+  background-color: #fef9c3;
+}
+
+.pb-state-high .p-progressbar {
+  background-color: #fee2e2;
+}
+
+.pb-state-low .p-progressbar .p-progressbar-value {
+  background-color: #22c55e;
+}
+
+.pb-state-mid .p-progressbar .p-progressbar-value {
+  background-color: #eab308;
+}
+
+.pb-state-high .p-progressbar .p-progressbar-value {
+  background-color: #ef4444;
+}

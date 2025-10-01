@@ -1,5 +1,4 @@
 import { DatePickerModule } from 'primeng/datepicker';
-import { EditorModule } from 'primeng/editor';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -10,13 +9,15 @@ import { SelectModule } from 'primeng/select';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TabsModule } from 'primeng/tabs';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
 import { TransactionService } from '../../services/transaction';
 import { CategoriesService } from '../../../settings/services/categories';
 import { ICategories, ICategoriesListResponse } from '../../../../models/responses/ICategoriesListResponse';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputTextModule } from 'primeng/inputtext';
 import { ITransactionDTO } from '../../../../models/DTOS/ITransactionDTO';
 import { AccountService } from '../../../accounts/services/account';
+import { CommonService } from '../../../../shared/services/common';
 
 @Component({
   selector: 'fintracker-transaction-type',
@@ -29,9 +30,9 @@ import { AccountService } from '../../../accounts/services/account';
     FloatLabelModule,
     DatePickerModule,
     SelectModule,
-    EditorModule,
     InputNumberModule,
     InputTextModule,
+    TextareaModule,
     CommonModule,
   ],
   templateUrl: './transaction-type.html',
@@ -43,26 +44,20 @@ export class TransactionTypeComponent implements OnInit {
   private _transtactionService = inject(TransactionService);
   private _categoryService = inject(CategoriesService);
   private _accountsService = inject(AccountService);
+  private _commonService = inject(CommonService);
 
   balance: number | undefined;
   spentDate: Date | undefined;
 
   categoriesIncomesList: ICategories[] = [];
   categoriesSpendList: ICategories[] = [];
+  accountsGroup: any[] = [];
+  transactionTypes: any[] = [];
+  selectedAccount: any;
 
   selectedCategory: ICategories | undefined;
 
   notes: string = '';
-
-  stateOptions: any[] = [
-    { icon: 'pi-shopping-cart', label: 'Gasto', value: 'spent', desc: 'Registra una compra o un pago que hiciste, como supermercado, gasolina o restaurante.' },
-    { icon: 'pi-receipt', label: 'Pago', value: 'payment', desc: 'Registra un pago que necesites hacer, como suscripciones, renta o servicios.' },
-    { icon: 'pi-arrow-right', label: 'Ingreso', value: 'incomnig', desc: 'Registra tu salario, bonos, freelance u otros ingresos que recibas.' },
-    { icon: 'pi-arrow-right-arrow-left', label: 'Transferencia', value: 'transfer', desc: 'Registra movimientos entre cuentas, como transferencia de cuenta de cheques a ahorro.' },
-    { icon: 'pi-arrow-circle-left', label: 'Reembolso', value: 'refound', desc: 'Registra un reembolso o una devolución que recibiste, como la devolución de un producto o cashback.' },
-    { icon: 'pi-list-check', label: 'Compra a meses', value: 'purshaseMonthly', desc: 'Registra una compra a meses con tarjeta de crédito.' },
-    { icon: 'pi-credit-card', label: 'Pago de tarjeta', value: 'cardPayment', desc: 'Registra un pago realizado a tu tarjeta de crédito.' },
-  ];
 
   tabIndexSelected: number = 0;
 
@@ -72,6 +67,9 @@ export class TransactionTypeComponent implements OnInit {
   desc: string = '';
 
   ngOnInit(): void {
+
+    this.transactionTypes = this._commonService.stateOptions;
+
     this._categoryService.GetCategoriesByUserId().subscribe({
       next: (response: ICategoriesListResponse) => {
         const { categoriesIncome, categoriesSpent } = response;
@@ -82,30 +80,51 @@ export class TransactionTypeComponent implements OnInit {
 
     this._accountsService.GetDebitCardsByUser().subscribe({
       next: (response) => {
-        console.log(response)
+        const { debitAccounts, creditAccounts } = response;
+
+        this.accountsGroup.push({
+          label: 'Cuentas de débito',
+          items: debitAccounts.map((element) => element)
+        });
+
+        this.accountsGroup.push({
+          label: 'Tarjetas de crédito',
+          items: creditAccounts.map((element) => element)
+        });
+
+        this.accountsGroup = this.accountsGroup.map(group => ({
+          ...group,
+          items: group.items.map(({ accountName, ...rest }: any) => ({
+            ...rest,
+            label: accountName
+          }))
+        }));
+
       }
     })
   }
 
   categoryTypeList(): boolean {
     const allowed = ['spent', 'payment', 'purshaseMonthly'];
-    return allowed.includes('spend'); // true si está, false si no
+    return allowed.includes('spend');
   }
-
 
   saveChanges(): void {
     const body: ITransactionDTO = {
       balance: this.balance!,
-      notes: this.notes,
-      transactionDate: this.spentDate!,
       description: this.desc,
+      transactionDate: this.spentDate!,
       categoryId: this.selectedCategory?._id!,
+      accountId: this.selectedAccount?._id!,
+      transactionType: this.categoryTypeList() ? 1 : 2,
+      notes: this.notes,
     };
 
     this._transtactionService.CreateTransaction(body).subscribe({
       next: (response) => {
-        console.log(response);
-
+        if (response) {
+          this._dialogService.close(true);
+        }
       },
       error: (err) => {
         console.error(err)
@@ -114,7 +133,10 @@ export class TransactionTypeComponent implements OnInit {
   }
 
   nextStep(): void {
+    if (this.tabIndexSelected == 1) this.saveChanges();
+
     this.tabIndexSelected = 1;
+
   }
 
   goBack(): void {

@@ -4,4 +4,6 @@ export interface ITransactionDTO {
   transactionDate: Date;
   categoryId: string;
   notes: string;
+  accountId: string;
+  transactionType: number;
 }
