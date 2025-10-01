@@ -7,6 +7,7 @@ export class IconColorClassPipe implements PipeTransform {
 
   private readonly map: Record<string, { bg: string; text: string }> = {
     'cyan-600':    { bg: 'bg-cyan-600/10',    text: 'text-cyan-600/90' },
+    'cyan-700':    { bg: 'bg-cyan-700/10',    text: 'text-cyan-700/90' },
     'red-700':     { bg: 'bg-red-700/10',     text: 'text-red-700/90' },
     'green-600':   { bg: 'bg-green-600/10',   text: 'text-green-600/90' },
     'pink-600':    { bg: 'bg-pink-600/10',    text: 'text-pink-600/90' },

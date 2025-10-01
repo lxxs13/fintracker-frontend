@@ -1,0 +1,134 @@
+<div class="flex flex-col gap-4 w-full">
+  <p-card>
+    <div class="flex flex-row justify-between items-center w-full">
+      <h1 class="text-4xl font-semibold">Transacciones</h1>
+      <button pButton icon="pi pi-plus" (click)="showDialog()">
+        Agregar transacción
+      </button>
+    </div>
+  </p-card>
+
+  <div class="flex flex-row w-full gap-4">
+    <p-card class="w-[35vw]">
+      <p class="text-center text-xl pb-2">Filtros de búsqueda</p>
+
+      <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
+        placeholder="Seleccione un rango de fechas" [numberOfMonths]="2" dateFormat="dd/mm/yy" fluid />
+
+      <p-accordion [value]="['']" [multiple]="true">
+        <p-accordion-panel value="0">
+          <p-accordion-header>
+            <p class="font-medium">Cuentas</p>
+          </p-accordion-header>
+
+          <p-accordion-content>
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <p class="font-extralight">Cuentas de débito</p>
+                <p-selectbutton class="w-full pill-select"
+                  [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '.1rem' }" [options]="debitAccountsFilter"
+                  [(ngModel)]="debitAccountSelected" [multiple]="true" optionLabel="categoryName" size="small"
+                  optionValue="_id">
+                  <ng-template pTemplate="item" let-opt>
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined rounded-md" [ngClass]="opt.iconColor | iconColorClass">
+                        account_balance_wallet
+                      </span>
+                      <span class="truncate text-xs">
+                        {{ opt.accountName }}
+                      </span>
+                    </div>
+                  </ng-template>
+                </p-selectbutton>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <p class="font-extralight">Tarjetas de crédito</p>
+                <p-selectbutton class="w-full" [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '.1rem' }"
+                  [options]="creditAccoutsFilter" [(ngModel)]="creditAccountSelected" [multiple]="true"
+                  optionLabel="categoryName" optionValue="_id">
+                  <ng-template pTemplate="item" let-opt>
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined rounded-md" [ngClass]="opt.iconColor | iconColorClass">
+                        credit_card
+                      </span>
+                      <span class="truncate text-xs">
+                        {{ opt.accountName }}
+                      </span>
+                    </div>
+                  </ng-template>
+                </p-selectbutton>
+              </div>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+
+        <p-accordion-panel value="1">
+          <p-accordion-header>
+            <p class="font-medium">Categorías</p>
+          </p-accordion-header>
+
+          <p-accordion-content>
+            <p-selectbutton class="w-full pill-select" [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '.1rem' }"
+              [options]="categoriesFilter" [(ngModel)]="categoryFilterSelected" [multiple]="true"
+              optionLabel="categoryName" size="small" optionValue="_id">
+              <ng-template pTemplate="item" let-opt>
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined rounded-md" [ngClass]="opt.iconColor | iconColorClass">
+                    {{ opt.iconLabel }}
+                  </span>
+                  <span class="truncate text-xs">{{ opt.categoryName }}</span>
+                </div>
+              </ng-template>
+            </p-selectbutton>
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
+
+      <div class="pt-2">
+        <p-button label="Filtrar" icon="pi pi-filter" fluid (onClick)="filterData()"></p-button>
+      </div>
+    </p-card>
+
+    <div class="flex flex-col w-full gap-4">
+      <div class="flex flex-row justify-between items-center w-full">
+        <p>
+          {{ totalTrasactions }} {{ totalTrasactions === 1 ? 'transacción' : 'transacciones' }}
+        </p>
+
+        <p>
+          {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
+        </p>
+      </div>
+
+      @for (item of transactionList; track item._id) {
+      <p-card class="flex flex-col gap-4 w-full justify-start items-center !h-min">
+        <ng-template #header>
+          <div class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm">
+            <p class="pl-2 p-1">{{ item.transactionDate | date: 'longDate'}}</p>
+          </div>
+        </ng-template>
+
+        <div class="flex flex-row gap-4 items-center">
+          <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.category.iconColor | iconColorClass">
+            {{ item.category.iconLabel }}
+          </span>
+
+          <div class="flex flex-row justify-between items-center w-full gap-4">
+            <div>
+              <p class="text-base">{{ item.description }}</p>
+              <p class="text-xs font-extralight">{{ item.account.accountName }}</p>
+            </div>
+
+            <div class="flex flex-col justify-end items-end">
+              <p class="text-base"> {{ item.amount | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+              <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+            </div>
+          </div>
+
+        </div>
+      </p-card>
+      }
+    </div>
+  </div>
+</div>
