@@ -1,8 +1,30 @@
 <div class="flex flex-col m-2 gap-4">
-  <p-toast/>
-  <fintracker-header class="w-full fixed top-0 left-0 z-50 pt-2"/>
+  <p-toast />
+  <fintracker-header class="w-full fixed top-0 left-0 z-50 pt-2" />
 
   <div class="flex-1 pt-[72px]">
-    <router-outlet/>
+    <router-outlet />
   </div>
+
+  @if (!isTransactionPage()) {
+  <p-speeddial [model]="items" direction="up" [style]="{ position: 'fixed', right: '0', bottom: '1rem' }">
+    <ng-template #button let-toggleCallback="toggleCallback">
+      <p-button icon="pi pi-plus" (click)="toggleCallback($event)" />
+    </ng-template>
+
+    <ng-template #item let-item let-toggleCallback="toggleCallback">
+      <div
+        class="flex flex-col items-center justify-between gap-2 p-2 border rounded
+        border-[var(--p-surface-500)] bg-[var(--p-surface-950)] w-36 cursor-pointer
+        hover:bg-[var(--p-surface-900)]"
+        (click)="toggleCallback($event, item)">
+        <i [class]="'pi ' + item.icon"></i>
+
+        <span>
+          {{ item.label }}
+        </span>
+      </div>
+    </ng-template>
+  </p-speeddial>
+  }
 </div>

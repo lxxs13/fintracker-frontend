@@ -20,7 +20,7 @@
             <ng-template #title>
               <div class="flex flex-row justify-between w-ful">
                 <span>{{ item.type }}</span>
-                <span>{{ remappedAccountsList[$index].totalBalance | currency }}</span>
+                <span>{{ remappedAccountsList[$index].totalBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
               </div>
             </ng-template>
 
@@ -29,7 +29,7 @@
             @for (item of remappedAccountsList[$index].accounts; track $index) {
             <div class="flex flex-row justify-between">
               <p>{{ item.accountName }}</p>
-              <p>{{ item.currentBalance | currency }}</p>
+              <p>{{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
             </div>
             }
           </p-card>
@@ -39,7 +39,7 @@
         <p-divider />
 
         <div class="flex justify-end">
-          <p class="p-card-title"> Balance total: {{ accountsBalanceTotal | currency }} </p>
+          <p class="p-card-title"> Balance total: {{ accountsBalanceTotal | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
         </div>
       </p-tabpanel>
 
@@ -64,7 +64,7 @@
               <div class="!w-[75%]">
                 <p class="flex flex-col gap-1 font-extralight">
                   Balance:
-                  <span class="text-2xl font-normal">{{ item.currentBalance | currency }}</span>
+                  <span class="text-2xl font-normal">{{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
                 </p>
               </div>
 
@@ -73,7 +73,7 @@
                   <p class="font-extralight">Disponible</p>
                   <p-progressbar [value]="getProgessValue(item.currentBalance, item.card?.creditCardLimit!)"
                     [showValue]="false" class="!w-full !h-[8px]" />
-                  <p class="font-extralight">{{ item.card?.creditCardLimit! - item.currentBalance | currency }}</p>
+                  <p class="font-extralight">{{ item.card?.creditCardLimit! - item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
                 </div>
               </div>
             </div>
@@ -84,7 +84,7 @@
         <p-divider />
 
         <div class="flex justify-end">
-          <p class="p-card-title">Balance total: {{ creditCardsBalance | currency }} </p>
+          <p class="p-card-title">Balance total: {{ creditCardsBalance | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
         </div>
       </p-tabpanel>
     </p-tabpanels>

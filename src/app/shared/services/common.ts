@@ -33,6 +33,19 @@ export class CommonService {
     dateFormat: 'dd/mm/yy'
   };
 
+  welcomeMessages: string[] = [
+    'Es un placer tenerte con nosotros, ',
+    'Hola, ',
+    'Que bueno verte, ',
+    'Bienvenido, ',
+  ];
+
+  periodOfTime = [
+    { id: 1, title: 'Esta semana' },
+    { id: 2, title: 'Este mes' },
+    { id: 3, title: 'Este año' },
+  ];
+
   showMessage(summary: string, detail: string, status: string) {
     this._messageService.add({
       closable: true,
