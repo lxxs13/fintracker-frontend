@@ -14,6 +14,14 @@ export class TransactionService {
     return this._http.get<ITransactionsListResponse>('/transaction');
   }
 
+  GetSummaryByMonth() {
+    return this._http.get('/transaction/thisMonth');
+  }
+
+  GetAvailableToSpend(): Observable<number> {
+    return this._http.get<number>('/account/summary');
+  }
+
   CreateTransaction(transactionInfo: ITransactionDTO) {
     return this._http.post('/transaction', transactionInfo);
   }

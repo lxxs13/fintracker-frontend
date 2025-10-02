@@ -8,8 +8,4 @@ import { Observable } from 'rxjs';
 export class DashboardService {
   private _http = inject(HttpClient);
 
-  GetSummary(): Observable<number> {
-    return this._http.get<number>('/account/summary');
-  }
-
 }

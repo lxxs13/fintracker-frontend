@@ -2,7 +2,7 @@
   <ng-template #start>
     <div class="flex flex-col gap-2">
       <h1 class="text-[clamp(24px,5vw,36px)] font-semibold">
-        ¡{{ welcomeMessages[randomIndex] }}
+        ¡{{ commonService.welcomeMessages[randomIndex] }}
         <span class="text-[var(--color-violet-500)] text-[clamp(24px,5vw,36px)]"> {{ usernameLogged }}</span>!
       </h1>
 
@@ -19,17 +19,17 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div class="order-2 md:order-1 flex flex-col gap-2">
           <p-float-label class="w-full mt-3" variant="on">
-            <p-select id="periodOfTime" [options]="periodOfTime" [(ngModel)]="periodSelected" optionLabel="title"
-              optionValue="id" fluid />
+            <p-select id="periodOfTime" [options]="commonService.periodOfTime" [(ngModel)]="periodSelected"
+              optionLabel="title" optionValue="id" fluid />
             <label for="periodOfTime">Periodo</label>
           </p-float-label>
 
           <p-divider />
 
           <div class="">
-            <p class="text-lg">Balance actual: {{ currentBalance | currency}}</p>
-          <p class="text-lg">Balance proyectado: {{ currentBalance | currency}}</p>
-          <p class="text-lg">Gastos proyectados: {{ 0 | currency}}</p>
+            <p class="text-lg">Balance actual: {{ currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+            <p class="text-lg">Balance proyectado: {{ currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+            <p class="text-lg">Gastos proyectados: {{ 0 | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
           </div>
         </div>
 
@@ -41,8 +41,53 @@
   </div>
 
   <div class="md:col-span-2 col-span-4">
-    <p-card header="Este mes">
+    <p-card header="Este mes" class="!w-full">
+      <p-carousel [value]="thisMonth" [numVisible]="1" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions">
+        <ng-template pTemplate="item" let-item>
+          <p-card class="!bg-[var(--p-surface-950)] !p-0 mx-2 max-w-full">
+            <ng-template #header>
+              <div
+                class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm flex items-center">
+                <span class="material-symbols-outlined rounded-md p-2">
+                  {{ item.icon }}
+                </span>
 
+                <div class="flex flex-col gap-0 min-w-full">
+                  <p class="pl-2 pt-1 font-medium truncate"> {{ item.title }} </p>
+                  <p class="pl-2 pb-1 font-extralight"> {{ item.totalSpend | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+                </div>
+              </div>
+            </ng-template>
+
+            @switch (item.type) {
+            @case ('general') {
+            <ng-template #content>
+              <div class="p-1 flex flex-col gap-4">
+                <p class="text-base font-extralight">{{ item.subTitle }}</p>
+
+                <div class="flex flex-col md:flex-row gap-4 w-full">
+                  @for (item of item.items; track $index) {
+                  <div class="flex flex-row gap-4 w-full items-center">
+                    <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.iconColor | iconColorClass">
+                      {{ item.iconLabel }}
+                    </span>
+
+                    <div class="flex flex-col gap-2">
+                      <p>{{ item.categoryName }}</p>
+                      <p class="text-xs font-extralight">{{ item.totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
+                      </p>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </ng-template>
+            }
+            }
+
+          </p-card>
+        </ng-template>
+      </p-carousel>
     </p-card>
   </div>
 
