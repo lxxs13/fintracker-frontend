@@ -1,10 +1,28 @@
-<div class="flex flex-col gap-4 w-full">
+<div class="flex flex-col gap-4 w-full !h-max">
   <p-card>
     <div class="flex flex-row justify-between items-center w-full">
       <h1 class="text-4xl font-semibold">Transacciones</h1>
-      <button pButton icon="pi pi-plus" (click)="showDialog()">
-        Agregar transacción
-      </button>
+      <p-menu #menu [model]="transactionItems" [popup]="true">
+        <ng-template pTemplate="item" let-item>
+          <div class="flex flex-row justify-start items-center gap-2 p-2 cursor-pointer" [pTooltip]="tooltipContent"
+            showDelay="200">
+            <ng-template #tooltipContent>
+              <div class="flex items-center !p-0 !m-0">
+                <span> {{ item.desc }} </span>
+              </div>
+            </ng-template>
+
+            <i [class]="'pi ' + item.icon"></i>
+
+            <span>
+              {{ item.label }}
+            </span>
+          </div>
+
+        </ng-template>
+
+      </p-menu>
+      <p-button (click)="menu.toggle($event)" icon="pi pi-plus" label="Agregar transacción" />
     </div>
   </p-card>
 
@@ -69,15 +87,15 @@
           </p-accordion-header>
 
           <p-accordion-content>
-            <p-selectbutton class="w-full pill-select" [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '.1rem' }"
+            <p-selectbutton class="" [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '0.5rem' }"
               [options]="categoriesFilter" [(ngModel)]="categoryFilterSelected" [multiple]="true"
               optionLabel="categoryName" size="small" optionValue="_id">
-              <ng-template pTemplate="item" let-opt>
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined rounded-md" [ngClass]="opt.iconColor | iconColorClass">
+              <ng-template pTemplate="item" let-opt >
+                <div class="flex items-center gap-2 p-1 rounded-sm" [ngClass]="opt.iconColor  | iconColorClass">
+                  <span class="material-symbols-outlined rounded-md !border-none !bg-transparent" [ngClass]="opt.iconColor  | iconColorClass">
                     {{ opt.iconLabel }}
                   </span>
-                  <span class="truncate text-xs">{{ opt.categoryName }}</span>
+                  <span class="truncate text-xs mx-2">{{ opt.categoryName }}</span>
                 </div>
               </ng-template>
             </p-selectbutton>
@@ -92,15 +110,31 @@
 
     <div class="flex flex-col w-full gap-4">
       <div class="flex flex-row justify-between items-center w-full">
-        <p>
-          {{ totalTrasactions }} {{ totalTrasactions === 1 ? 'transacción' : 'transacciones' }}
-        </p>
+        @if (isLoading) {
+          <p-skeleton width="8rem" height="2rem"/>
+        } @else {
+          <p>
+            {{ totalTrasactions }} {{ totalTrasactions === 1 ? 'transacción' : 'transacciones' }}
+          </p>
+        }
 
-        <p>
-          {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
-        </p>
+        @if (isLoading) {
+          <p-skeleton width="7rem" height="2rem"/>
+
+        } @else {
+          <p>
+            {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
+          </p>
+        }
       </div>
 
+      @if(isLoading) {
+        @for (item of [1,2,3,4,5]; track $index) {
+          <div class="w-full h-[7rem] flex flex-col gap-2">
+            <p-skeleton width="100%" height="7rem" />
+          </div>
+        }
+      }@else {
       @for (item of transactionList; track item._id) {
       <p-card class="flex flex-col gap-4 w-full justify-start items-center !h-min">
         <ng-template #header>
@@ -128,6 +162,7 @@
 
         </div>
       </p-card>
+      }
       }
     </div>
   </div>

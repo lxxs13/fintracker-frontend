@@ -34,7 +34,7 @@ export class HeaderComponent {
         routerLink: 'calendar',
       },
       {
-        label: 'Reportes',
+        label: 'Resumen',
         icon: 'pi pi-chart-pie',
         routerLink: 'reports'
       },

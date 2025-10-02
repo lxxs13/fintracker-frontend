@@ -4,10 +4,9 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectModule } from 'primeng/select';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { TabsModule } from 'primeng/tabs';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,6 +17,8 @@ import { ICategories, ICategoriesListResponse } from '../../../../models/respons
 import { ITransactionDTO } from '../../../../models/DTOS/ITransactionDTO';
 import { AccountService } from '../../../accounts/services/account';
 import { CommonService } from '../../../../shared/services/common';
+import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
+import { IconColorClassPipe } from "../../../../shared/pipes/icon-color-class-pipe";
 
 @Component({
   selector: 'fintracker-transaction-type',
@@ -25,7 +26,6 @@ import { CommonService } from '../../../../shared/services/common';
     FormsModule,
     SelectButtonModule,
     ButtonModule,
-    TabsModule,
     DividerModule,
     FloatLabelModule,
     DatePickerModule,
@@ -34,9 +34,9 @@ import { CommonService } from '../../../../shared/services/common';
     InputTextModule,
     TextareaModule,
     CommonModule,
-  ],
+    IconColorClassPipe
+],
   templateUrl: './transaction-type.html',
-  styleUrl: './transaction-type.css',
   providers: [DialogService]
 })
 export class TransactionTypeComponent implements OnInit {
@@ -44,31 +44,30 @@ export class TransactionTypeComponent implements OnInit {
   private _transtactionService = inject(TransactionService);
   private _categoryService = inject(CategoriesService);
   private _accountsService = inject(AccountService);
-  private _commonService = inject(CommonService);
+  private _dialogConfig = inject(DynamicDialogConfig);
 
   balance: number | undefined;
   spentDate: Date | undefined;
 
   categoriesIncomesList: ICategories[] = [];
   categoriesSpendList: ICategories[] = [];
+
   accountsGroup: any[] = [];
-  transactionTypes: any[] = [];
   selectedAccount: any;
 
   selectedCategory: ICategories | undefined;
 
   notes: string = '';
 
-  tabIndexSelected: number = 0;
-
   dialogRef: DynamicDialogRef | undefined;
 
   value: string = '';
   desc: string = '';
 
-  ngOnInit(): void {
+  transactionType: string = '';
 
-    this.transactionTypes = this._commonService.stateOptions;
+  ngOnInit(): void {
+    this.transactionType = this._dialogConfig.data.transactionType;
 
     this._categoryService.GetCategoriesByUserId().subscribe({
       next: (response: ICategoriesListResponse) => {
@@ -99,14 +98,17 @@ export class TransactionTypeComponent implements OnInit {
             label: accountName
           }))
         }));
-
       }
-    })
+    });
   }
 
-  categoryTypeList(): boolean {
+  categoryTypeList(type: string): boolean {
     const allowed = ['spent', 'payment', 'purshaseMonthly'];
-    return allowed.includes('spend');
+    return allowed.includes(type);
+  }
+
+  closeDialog(): void {
+    this._dialogService.close(false);
   }
 
   saveChanges(): void {
@@ -116,7 +118,7 @@ export class TransactionTypeComponent implements OnInit {
       transactionDate: this.spentDate!,
       categoryId: this.selectedCategory?._id!,
       accountId: this.selectedAccount?._id!,
-      transactionType: this.categoryTypeList() ? 1 : 2,
+      transactionType: this.categoryTypeList(this.transactionType) ? 1 : 2,
       notes: this.notes,
     };
 
@@ -130,19 +132,5 @@ export class TransactionTypeComponent implements OnInit {
         console.error(err)
       }
     })
-  }
-
-  nextStep(): void {
-    if (this.tabIndexSelected == 1) this.saveChanges();
-
-    this.tabIndexSelected = 1;
-
-  }
-
-  goBack(): void {
-    if (this.tabIndexSelected === 1)
-      this.tabIndexSelected = 0;
-    else if (this.tabIndexSelected === 0)
-      this._dialogService.close(false);
   }
 }

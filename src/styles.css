@@ -59,3 +59,12 @@ p-card {
 .pb-state-high .p-progressbar .p-progressbar-value {
   background-color: #ef4444;
 }
+
+.p-togglebutton-sm .p-togglebutton-content {
+  padding:  0 !important;
+}
+
+.p-togglebutton {
+  border-radius: 5.75px !important;
+  padding: 0 !important;
+}

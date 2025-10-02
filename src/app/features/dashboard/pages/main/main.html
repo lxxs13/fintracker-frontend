@@ -1,15 +1,15 @@
-<div class="flex flex-col m-2 gap-4">
+<div class="min-h-screen bg-[var(--p-surface-950)] flex flex-col">
   <p-toast />
   <fintracker-header class="w-full fixed top-0 left-0 z-50 pt-2" />
 
-  <div class="flex-1 pt-[72px]">
+  <div class="flex-1 min-h-[calc(100vh-72px)] pt-[74px] bg-[var(--p-surface-950)]">
     <router-outlet />
   </div>
 
   @if (!isTransactionPage()) {
   <p-speeddial [model]="items" direction="up" [style]="{ position: 'fixed', right: '0', bottom: '1rem' }">
     <ng-template #button let-toggleCallback="toggleCallback">
-      <p-button icon="pi pi-plus" (click)="toggleCallback($event)" />
+      <p-button [rounded]="true" icon="pi pi-plus" (click)="toggleCallback($event)" />
     </ng-template>
 
     <ng-template #item let-item let-toggleCallback="toggleCallback">
@@ -28,3 +28,11 @@
   </p-speeddial>
   }
 </div>
+<!--
+<div class="">
+  <app-header class=""></app-header>
+
+  <main class="">
+    <router-outlet></router-outlet>
+  </main>
+</div> -->

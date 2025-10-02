@@ -7,6 +7,8 @@ import { filter } from 'rxjs';
 import { HeaderComponent } from '../../components/header/header';
 import { ButtonModule } from 'primeng/button';
 import { CommonService } from '../../../../shared/services/common';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { TransactionTypeComponent } from '../../../transactions/dialogs/transaction-type/transaction-type';
 
 @Component({
   selector: 'fintracker-main',
@@ -18,10 +20,14 @@ import { CommonService } from '../../../../shared/services/common';
     ToastModule,
   ],
   templateUrl: './main.html',
+  providers: [DialogService],
 })
 export class MainPage implements OnInit {
   private _route = inject(Router);
   private _commonService = inject(CommonService);
+
+  private _dialogService = inject(DialogService);
+  dialogRef: DynamicDialogRef | undefined;
 
   currentRoute = signal<string>('');
   isTransactionPage = computed(() => this.currentRoute().includes('dashboard/transactions'));
@@ -32,8 +38,6 @@ export class MainPage implements OnInit {
     this._route.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        console.log(event);
-
         this.currentRoute.set(event.urlAfterRedirects);
       });
   }
@@ -47,8 +51,30 @@ export class MainPage implements OnInit {
       this.items.push({
         label: option.label,
         icon: option.icon,
+        command: () => this.showDialog(option.label ,option.value),
       });
     });
   }
+
+    showDialog(title: string, transactionType: string) {
+      this.dialogRef = this._dialogService.open(TransactionTypeComponent, {
+        modal: false,
+        closable: true,
+        maximizable: true,
+        draggable: true,
+        maskStyleClass: 'backdrop-blur-sm',
+        width: '50rem',
+        header: `Agregar ${title.toLocaleLowerCase()}`,
+        data: {
+          transactionType,
+        },
+      });
+
+      this.dialogRef.onClose.subscribe((response) => {
+        if (response) {
+          this._commonService.showMessage('Transacción creada', 'La transacción se ha gaurdado correctamente', 'OK');
+        }
+      })
+    }
 
 }
