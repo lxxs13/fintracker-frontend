@@ -72,7 +72,6 @@ export class DashboardComponent implements OnInit {
     this._transactionService.GetSummaryByMonth().subscribe({
       next: (response: any) => {
 
-
         this.thisMonth = this.thisMonth.map(card =>
           card.type === 'general'
             ? { ...card, items: response.byCategory, totalSpend: response.totalSpend }

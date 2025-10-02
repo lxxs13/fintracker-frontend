@@ -42,19 +42,20 @@
 
   <div class="md:col-span-2 col-span-4">
     <p-card header="Este mes" class="!w-full">
-      <p-carousel [value]="thisMonth" [numVisible]="1" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions">
+      <p-carousel [value]="thisMonth" [numVisible]="1" [numScroll]="1" [circular]="true"
+        [responsiveOptions]="responsiveOptions">
         <ng-template pTemplate="item" let-item>
           <p-card class="!bg-[var(--p-surface-950)] !p-0 mx-2 max-w-full">
             <ng-template #header>
-              <div
-                class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm flex items-center">
+              <div class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm flex items-center">
                 <span class="material-symbols-outlined rounded-md p-2">
                   {{ item.icon }}
                 </span>
 
                 <div class="flex flex-col gap-0 min-w-full">
                   <p class="pl-2 pt-1 font-medium truncate"> {{ item.title }} </p>
-                  <p class="pl-2 pb-1 font-extralight"> {{ item.totalSpend | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+                  <p class="pl-2 pb-1 font-extralight"> {{ item.totalSpend | currency:'USD':'symbol':'1.2-2':'en-US' }}
+                  </p>
                 </div>
               </div>
             </ng-template>
@@ -92,8 +93,19 @@
   </div>
 
   <div class="md:col-span-2 col-span-4">
-    <p-card header="Próximo">
+    <p-card header="Próximo" class="!w-full">
+      <div class="grid place-items-center text-center min-h-52 p-4">
+        <div class="flex flex-col items-center gap-4">
+          <span class="material-symbols-outlined !text-[30px] rounded-4xl p-2 !border-cyan-600/40 border-1" [ngClass]="'cyan-600' | iconColorClass">
+            check
+          </span>
 
+          <div>
+            <p class="font-medium text-2xl">¡Todo pagado!</p>
+            <p class="font-extralight">No tienes pagos programados próximamente.</p>
+          </div>
+        </div>
+      </div>
     </p-card>
   </div>
 
