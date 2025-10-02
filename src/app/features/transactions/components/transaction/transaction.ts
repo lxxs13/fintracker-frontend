@@ -1,13 +1,18 @@
+import { ITransactionsFilterDTO } from './../../../../models/ITransactionsFilterDTO';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { MenuItem } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AccordionModule } from 'primeng/accordion';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { forkJoin, map, catchError, of } from 'rxjs';
+import { MenuModule } from 'primeng/menu';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TooltipModule } from 'primeng/tooltip';
+import { forkJoin, map, catchError, of, finalize } from 'rxjs';
 import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { TransactionService } from '../../services/transaction';
 import { ITransactionList, ITransactionsListResponse } from '../../../../models/responses/ITransactionsListResponse';
@@ -28,6 +33,9 @@ import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
     SelectButtonModule,
     DatePickerModule,
     AccordionModule,
+    MenuModule,
+    TooltipModule,
+    SkeletonModule,
     IconColorClassPipe,
   ],
   templateUrl: './transaction.html',
@@ -54,14 +62,23 @@ export class Transaction implements OnDestroy, OnInit {
   creditAccoutsFilter: IAccount[] = []
   creditAccountSelected: any;
 
+  transactionTypes: any[] = [];
+
   rangeDates: Date[] = [];
+
+  transactionTypeSelected: string = '';
 
   totalTrasactions: number = 0;
   totalSpent: number = 0;
 
+  isLoading: boolean = false;
+
+  transactionItems: MenuItem[] = [];
+
   ngOnInit(): void {
     this.getFilters();
     this.getTransactionsList();
+    this.initTransacionTypesList();
 
     const today = new Date();
     const start = this.oneMonthAgoClamped(today);
@@ -69,8 +86,28 @@ export class Transaction implements OnDestroy, OnInit {
     this.rangeDates = [start, today];
   }
 
-  getTransactionsList(): void {
-    this._transactionService.GetTransactions().subscribe({
+  ngOnDestroy(): void {
+    if (this.dialogRef) this.dialogRef.close();
+  }
+
+  initTransacionTypesList(): void {
+    this._commonService.stateOptions.forEach(option => {
+      this.transactionItems.push({
+        desc: option.desc,
+        icon: option.icon,
+        label: option.label,
+        command: () => {
+          this.transactionTypeSelected = option.value;
+          this.showDialog()
+        },
+      })
+    });
+  }
+
+  getTransactionsList(filter?: ITransactionsFilterDTO): void {
+    this.isLoading = true;
+
+    this._transactionService.GetTransactions(filter).subscribe({
       next: (response: ITransactionsListResponse) => {
         const { total, spentTotal, transactionList } = response;
         this.totalTrasactions = total;
@@ -79,7 +116,11 @@ export class Transaction implements OnDestroy, OnInit {
       },
       error: (err) => {
         console.error(err);
-
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 625);
       }
     });
   }
@@ -107,23 +148,23 @@ export class Transaction implements OnDestroy, OnInit {
     ).subscribe();
   }
 
-  ngOnDestroy(): void {
-
-  }
-
   showDialog() {
     this.dialogRef = this._dialogService.open(TransactionTypeComponent, {
       modal: true,
+      // maskStyleClass: 'backdrop-blur-sm',
       closable: true,
       maximizable: true,
       draggable: true,
       width: '50rem',
-      header: 'Agregar transacción'
+      header: 'Agregar transacción',
+      data: {
+        transactionType: this.transactionTypeSelected
+      },
     });
 
     this.dialogRef.onClose.subscribe((response) => {
       if (response) {
-        this._commonService.showMessage('Transacción creada', 'La tarnsacción se ha gaurdado correctamente', 'OK');
+        this._commonService.showMessage('Transacción creada', 'La transacción se ha gaurdado correctamente', 'OK');
         this.getTransactionsList();
       }
     })
@@ -144,6 +185,36 @@ export class Transaction implements OnDestroy, OnInit {
   }
 
   filterData(): void {
-    console.log(this.debitAccountSelected)
+    const { startDate, endDate } = this.getDates();
+
+    const filters: ITransactionsFilterDTO = {
+      startDate,
+      endDate,
+    }
+
+    this.getTransactionsList(filters);
   }
+
+  getDates(): { startDate: string, endDate: string } {
+    let dates = { startDate: '', endDate: '' };
+
+    const start = this.rangeDates[0];
+    const end = this.rangeDates[1];
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const startYear = start.getFullYear();
+    const startMonth = pad(start.getMonth() + 1);
+    const startDay = pad(start.getDate());
+
+    const endYear = end.getFullYear();
+    const endMonth = pad(end.getMonth() + 1);
+    const endDay = pad(end.getDate());
+
+    dates.startDate = `${startYear}/${startMonth}/${startDay}T00:00:00.000Z`;
+    dates.endDate = `${endYear}/${endMonth}/${endDay}T23:59:59.999Z`;
+
+    return dates;
+  }
+
 }

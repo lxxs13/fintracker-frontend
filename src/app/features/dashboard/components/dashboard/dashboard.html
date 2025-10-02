@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-2">
       <h1 class="text-[clamp(24px,5vw,36px)] font-semibold">
         ¡{{ commonService.welcomeMessages[randomIndex] }}
-        <span class="text-[var(--color-violet-500)] text-[clamp(24px,5vw,36px)]"> {{ usernameLogged }}</span>!
+        <span class="text-[clamp(24px,5vw,36px)]" [ngClass]="'purple' | iconColorClass:'text'"> {{ usernameLogged }}</span>!
       </h1>
 
       <p class="text-[clamp(16px,5vw,28px)]">
@@ -34,7 +34,9 @@
         </div>
 
         <div class="order-1 md:order-2">
-
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod nemo iure explicabo, officiis, error doloremque expedita qui nobis ab voluptatum, minus laborum obcaecati cupiditate adipisci tempore incidunt sed excepturi. Enim.
+          Quo perspiciatis recusandae ut impedit ab maiores similique alias! Tenetur et iusto eligendi reiciendis ut, eveniet assumenda ipsum ex consequuntur omnis nesciunt inventore modi veniam itaque voluptas blanditiis obcaecati sunt.
+          Ratione fugit iusto magni error eligendi aliquid quisquam, vitae aliquam rem mollitia dolorum voluptatibus quis, libero dignissimos voluptates nihil aperiam itaque sed fuga quibusdam. Deserunt cupiditate veritatis rerum eum excepturi.
         </div>
       </div>
     </p-card>
@@ -43,7 +45,7 @@
   <div class="md:col-span-2 col-span-4">
     <p-card header="Este mes" class="!w-full">
       <p-carousel [value]="thisMonth" [numVisible]="1" [numScroll]="1" [circular]="true"
-        [responsiveOptions]="responsiveOptions">
+        [responsiveOptions]="responsiveOptions" autoplayInterval="3000">
         <ng-template pTemplate="item" let-item>
           <p-card class="!bg-[var(--p-surface-950)] !p-0 mx-2 max-w-full">
             <ng-template #header>
@@ -96,7 +98,7 @@
     <p-card header="Próximo" class="!w-full">
       <div class="grid place-items-center text-center min-h-52 p-4">
         <div class="flex flex-col items-center gap-4">
-          <span class="material-symbols-outlined !text-[30px] rounded-4xl p-2 !border-cyan-600/40 border-1" [ngClass]="'cyan-600' | iconColorClass">
+          <span class="material-symbols-outlined !text-[30px] rounded-4xl p-2" [ngClass]="'sky' | iconColorClass">
             check
           </span>
 

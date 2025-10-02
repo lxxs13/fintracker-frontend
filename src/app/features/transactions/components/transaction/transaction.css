@@ -1,0 +1,27 @@
+/* Convierte el contenedor del selectButton a grid responsive */
+:host ::ng-deep .btn-grid.p-selectbutton {
+  display: grid !important;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* ajusta 200px a tu gusto */
+}
+
+/* Cada opción (button interno) llena su celda y sin bordes */
+:host ::ng-deep .btn-grid .p-button {
+  width: 100%;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important; /* el padding lo controla tu tarjeta interna (.p-2 arriba) */
+}
+
+/* Estado seleccionado: sin borde; si quieres un highlight sutil, usa outline */
+:host ::ng-deep .btn-grid .p-button.p-highlight {
+  border: 0 !important;
+  box-shadow: none !important;
+  /* opcional: outline con el color actual del texto */
+  /* outline: 2px solid currentColor; outline-offset: 0; */
+}
+
+/* Quita focus feo del botón interno (opcional) */
+:host ::ng-deep .btn-grid .p-button:focus {
+  box-shadow: none !important;
+}
