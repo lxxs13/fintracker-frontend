@@ -118,9 +118,7 @@ export class Transaction implements OnDestroy, OnInit {
         console.error(err);
       },
       complete: () => {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 625);
+        this.isLoading = false;
       }
     });
   }
@@ -142,7 +140,7 @@ export class Transaction implements OnDestroy, OnInit {
         this.creditAccoutsFilter = creditAccounts;
 
       }),
-      catchError(err => {
+      catchError(() => {
         return of([]);
       }),
     ).subscribe();
@@ -185,7 +183,7 @@ export class Transaction implements OnDestroy, OnInit {
   }
 
   filterData(): void {
-    const { startDate, endDate } = this.getDates();
+    const { startDate, endDate } = this._commonService.getDates(this.rangeDates);
 
     const filters: ITransactionsFilterDTO = {
       startDate,
@@ -193,28 +191,6 @@ export class Transaction implements OnDestroy, OnInit {
     }
 
     this.getTransactionsList(filters);
-  }
-
-  getDates(): { startDate: string, endDate: string } {
-    let dates = { startDate: '', endDate: '' };
-
-    const start = this.rangeDates[0];
-    const end = this.rangeDates[1];
-
-    const pad = (n: number) => n.toString().padStart(2, '0');
-
-    const startYear = start.getFullYear();
-    const startMonth = pad(start.getMonth() + 1);
-    const startDay = pad(start.getDate());
-
-    const endYear = end.getFullYear();
-    const endMonth = pad(end.getMonth() + 1);
-    const endDay = pad(end.getDate());
-
-    dates.startDate = `${startYear}/${startMonth}/${startDay}T00:00:00.000Z`;
-    dates.endDate = `${endYear}/${endMonth}/${endDay}T23:59:59.999Z`;
-
-    return dates;
   }
 
 }
