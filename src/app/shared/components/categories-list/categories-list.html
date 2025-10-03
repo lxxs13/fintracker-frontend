@@ -1,0 +1,18 @@
+<p-float-label variant="on">
+  <p-select id="input_selected_category"
+    [options]="commonService.categoryTypeList(transactionType) ? categoriesSpendList : categoriesIncomesList" size="large"
+    [(ngModel)]="selectedCategory" optionLabel="categoryName" fluid appendTo="body" showClear>
+    <ng-template pTemplate="item" let-item>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined rounded-md p-2"
+          [ngClass]="item.iconColor | iconColorClass">
+          {{ item.iconLabel }}
+        </span>
+
+        <span>{{ item.categoryName }}</span>
+      </div>
+    </ng-template>
+  </p-select>
+
+  <label for="input_selected_category">Categoría</label>
+</p-float-label>

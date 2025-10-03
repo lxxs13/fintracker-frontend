@@ -26,27 +26,9 @@
         </ng-template>
       </p-select>
       <label for="input_account">Seleccione cuenta</label>
-
     </p-float-label>
 
-    <p-float-label variant="on" class="mt-2">
-      <p-select id="input_selected_category"
-        [options]="categoryTypeList(transactionType) ? categoriesSpendList : categoriesIncomesList" size="large"
-        [(ngModel)]="selectedCategory" optionLabel="categoryName" fluid appendTo="body">
-        <ng-template pTemplate="item" let-item>
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined rounded-md p-2"
-              [ngClass]="item.iconColor | iconColorClass">
-              {{ item.iconLabel }}
-            </span>
-
-            <span>{{ item.categoryName }}</span>
-          </div>
-        </ng-template>
-      </p-select>
-
-      <label for="input_selected_category">Categoría</label>
-    </p-float-label>
+    <fintracker-categories-list [transactionType]="transactionType" (selectedCategoryOutput)="selectedCategory = $event"/>
 
     <p-float-label variant="on">
       <textarea id="input_descripcion" rows="3" cols="30" pTextarea [(ngModel)]="notes" fluid></textarea>

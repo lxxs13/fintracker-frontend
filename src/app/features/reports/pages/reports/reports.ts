@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { SummaryComponent } from "../../components/summary/summary";
 
 @Component({
   selector: 'fintracker-reports',
-  imports: [],
+  imports: [SummaryComponent],
   templateUrl: './reports.html',
   styleUrl: './reports.css'
 })

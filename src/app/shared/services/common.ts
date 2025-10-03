@@ -55,7 +55,11 @@ export class CommonService {
       life: 5000,
       styleClass: 'p-toast-message-success'
     });
+  }
 
+  categoryTypeList(type: string): boolean {
+    const allowed = ['spent', 'payment', 'purshaseMonthly'];
+    return allowed.includes(type);
   }
 
 }

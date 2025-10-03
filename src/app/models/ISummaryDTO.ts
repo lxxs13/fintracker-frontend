@@ -1,5 +1,5 @@
 export interface ISummaryCard {
-  type: 'general' | 'card' | 'income' | 'cashflow';
+  type: 'general' | 'card' | 'income' | 'cashflow' | undefined;
   title: string;
   icon: string;
   subTitle: string;
