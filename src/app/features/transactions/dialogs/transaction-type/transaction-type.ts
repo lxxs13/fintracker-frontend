@@ -16,9 +16,9 @@ import { CategoriesService } from '../../../settings/services/categories';
 import { ICategories, ICategoriesListResponse } from '../../../../models/responses/ICategoriesListResponse';
 import { ITransactionDTO } from '../../../../models/DTOS/ITransactionDTO';
 import { AccountService } from '../../../accounts/services/account';
-import { CommonService } from '../../../../shared/services/common';
-import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
 import { IconColorClassPipe } from "../../../../shared/pipes/icon-color-class-pipe";
+import { CommonService } from '../../../../shared/services/common';
+import { CategoriesListComponent } from '../../../../shared/components/categories-list/categories-list';
 
 @Component({
   selector: 'fintracker-transaction-type',
@@ -34,7 +34,7 @@ import { IconColorClassPipe } from "../../../../shared/pipes/icon-color-class-pi
     InputTextModule,
     TextareaModule,
     CommonModule,
-    IconColorClassPipe
+    CategoriesListComponent,
 ],
   templateUrl: './transaction-type.html',
   providers: [DialogService]
@@ -42,15 +42,12 @@ import { IconColorClassPipe } from "../../../../shared/pipes/icon-color-class-pi
 export class TransactionTypeComponent implements OnInit {
   private _dialogService = inject(DynamicDialogRef);
   private _transtactionService = inject(TransactionService);
-  private _categoryService = inject(CategoriesService);
+  private _commonService = inject(CommonService);
   private _accountsService = inject(AccountService);
   private _dialogConfig = inject(DynamicDialogConfig);
 
   balance: number | undefined;
   spentDate: Date | undefined;
-
-  categoriesIncomesList: ICategories[] = [];
-  categoriesSpendList: ICategories[] = [];
 
   accountsGroup: any[] = [];
   selectedAccount: any;
@@ -68,14 +65,6 @@ export class TransactionTypeComponent implements OnInit {
 
   ngOnInit(): void {
     this.transactionType = this._dialogConfig.data.transactionType;
-
-    this._categoryService.GetCategoriesByUserId().subscribe({
-      next: (response: ICategoriesListResponse) => {
-        const { categoriesIncome, categoriesSpent } = response;
-        this.categoriesIncomesList = categoriesIncome;
-        this.categoriesSpendList = categoriesSpent;
-      }
-    });
 
     this._accountsService.GetDebitCardsByUser().subscribe({
       next: (response) => {
@@ -102,11 +91,6 @@ export class TransactionTypeComponent implements OnInit {
     });
   }
 
-  categoryTypeList(type: string): boolean {
-    const allowed = ['spent', 'payment', 'purshaseMonthly'];
-    return allowed.includes(type);
-  }
-
   closeDialog(): void {
     this._dialogService.close(false);
   }
@@ -118,7 +102,7 @@ export class TransactionTypeComponent implements OnInit {
       transactionDate: this.spentDate!,
       categoryId: this.selectedCategory?._id!,
       accountId: this.selectedAccount?._id!,
-      transactionType: this.categoryTypeList(this.transactionType) ? 1 : 2,
+      transactionType: this._commonService.categoryTypeList(this.transactionType) ? 1 : 2,
       notes: this.notes,
     };
 

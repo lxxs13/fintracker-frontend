@@ -4,8 +4,12 @@ export interface ICategoriesListResponse {
 }
 
 export interface ICategories {
-  _id:          string;
-  categoryName: string;
-  iconLabel:    string;
-  iconColor:    string;
+  _id?:          string;
+  categoryId?:   string;
+  categoryName:  string;
+  iconLabel:     string;
+  iconColor:     string;
+  totalSpent ?:   number;
+  totalTransactions?: number;
+  txCount?: number;
 }

@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
 
+@source inline("text-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{400,500,600,700}/{90}");
+@source inline("bg-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{400,500,600,700}/{10}");
+@source inline("border-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{400,500,600,700}/{50}");
+
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -61,7 +66,7 @@ p-card {
 }
 
 .p-togglebutton-sm .p-togglebutton-content {
-  padding:  0 !important;
+  padding: 0 !important;
 }
 
 .p-togglebutton {
