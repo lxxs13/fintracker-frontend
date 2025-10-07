@@ -26,12 +26,20 @@
 
             <p-divider />
 
-            @for (item of remappedAccountsList[$index].accounts; track $index) {
-            <div class="flex flex-row justify-between">
-              <p>{{ item.accountName }}</p>
-              <p>{{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+            <div class="flex flex-col w-full gap-1">
+              @for (item of remappedAccountsList[$index].accounts; track $index) {
+              <p-button fluid severity="secondary" (onClick)="show('Editar', this.selectedTab, item)">
+                <ng-template #content>
+                  <div class="flex flex-row justify-between items-center w-full">
+                    <p>
+                      {{ item.accountName }}
+                    </p>
+                    <p>{{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+                  </div>
+                </ng-template>
+              </p-button>
+              }
             </div>
-            }
           </p-card>
           }
         </div>
@@ -39,45 +47,52 @@
         <p-divider />
 
         <div class="flex justify-end">
-          <p class="p-card-title"> Balance total: {{ accountsBalanceTotal | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+          <p class="p-card-title"> Balance total: {{ accountsBalanceTotal | currency:'USD':'symbol':'1.2-2':'en-US' }}
+          </p>
         </div>
       </p-tabpanel>
 
       <p-tabpanel value="1">
         <div class="flex flex-col gap-4">
           @for (item of remappedCreditList; track $index) {
-          <p-card>
-            <ng-template #title>
-              <div class="w-full flex justify-between items-center">
-                <span class="flex flex-row gap-4 items-center">
-                  <i class="pi pi-credit-card"></i>
-                  <p>{{ item.accountName }}</p>
-                </span>
+          <p-button severity="secondary" fluid (onClick)="show('Editar', selectedTab, item)">
+            <ng-template #content>
+              <div class="flex flex-col w-full">
+                <div class="w-full flex justify-between items-center">
+                  <span class="flex flex-row gap-4 items-center">
+                    <i class="pi pi-credit-card"></i>
+                    <p>{{ item.accountName }}</p>
+                  </span>
 
-                <span>
-                  **** {{ item.card?.lastDigits }}
-                </span>
+                  <span>
+                    **** {{ item.card?.lastDigits }}
+                  </span>
+                </div>
+
+                <div class="flex flex-row justify-between items-center !w-full pt-2">
+                  <div class="">
+                    <p class="flex flex-col gap-1 font-extralight">
+                      Balance:
+                      <span class="text-2xl font-normal">{{ item.currentBalance |
+                        currency:'USD':'symbol':'1.2-2':'en-US'
+                        }}</span>
+                    </p>
+                  </div>
+
+                  <div class="flex flex-col justify-end items-end gap-4 !w-[25%]">
+                    <div class="flex flex-col items-center w-full gap-2" [ngStyle]="styleVars(item)">
+                      <p class="font-extralight">Disponible</p>
+                      <p-progressbar [value]="getProgessValue(item.currentBalance, item.card?.creditCardLimit!)"
+                        [showValue]="false" class="!w-full !h-[8px]" />
+                      <p class="font-extralight">{{ item.card?.creditCardLimit! - item.currentBalance |
+                        currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </ng-template>
 
-            <div class="flex flex-row justify-between items-center !w-full pt-2">
-              <div class="!w-[75%]">
-                <p class="flex flex-col gap-1 font-extralight">
-                  Balance:
-                  <span class="text-2xl font-normal">{{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
-                </p>
-              </div>
-
-              <div class="flex flex-col justify-end items-end gap-4 !w-[25%]">
-                <div class="flex flex-col items-center w-full gap-2" [ngStyle]="styleVars(item)">
-                  <p class="font-extralight">Disponible</p>
-                  <p-progressbar [value]="getProgessValue(item.currentBalance, item.card?.creditCardLimit!)"
-                    [showValue]="false" class="!w-full !h-[8px]" />
-                  <p class="font-extralight">{{ item.card?.creditCardLimit! - item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
-                </div>
-              </div>
-            </div>
-          </p-card>
+          </p-button>
           }
         </div>
 

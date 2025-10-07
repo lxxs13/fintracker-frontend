@@ -48,6 +48,8 @@ export class AccountComponent implements OnInit {
 
   getDebitsCard(): void {
     this.remappedAccountsList = [];
+    this.accountsBalanceTotal = 0;
+
     this._accountService.GetDebitCardsByUser().subscribe({
       next: (response: IAccountsListResponse) => {
         const { debitAccounts, creditAccounts } = response;
@@ -80,7 +82,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  show(action: string, type: number) {
+  show(action: string, type: number, item?: IAccount) {
     const header = type === 0 ? 'cuenta de débito' : 'tarjeta de crédito';
 
     this.dialogRef = this._dialogService.open(AddEditCardAccountComponent, {
@@ -88,20 +90,22 @@ export class AccountComponent implements OnInit {
       closable: true,
       maximizable: true,
       draggable: true,
-      width: '50rem',
+      width: '75rem',
+      breakpoints: {
+        '1199px': '75vw',
+        '575px': '90vw'
+      },
       header: `${action} ${header}`,
       data: {
         action,
         type,
+        item,
       }
     });
 
     this.dialogRef.onClose.subscribe((response) => {
-      if (response) {
-        this._commonService.showMessage('Cuenta creada con éxito', 'La cuenta de débito se ha agregado correctamente', 'ok');
-
+      if (response)
         this.getDebitsCard();
-      }
     })
   }
 
