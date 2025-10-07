@@ -18,8 +18,20 @@ export class AccountService {
     return this._http.post<boolean>('/account/debit', body);
   }
 
+  UpdateDebitCard(id: string, body: IDebitAccountDTO): Observable<boolean> {
+    return this._http.put<boolean>(`/account/debit/${id}`, body);
+  }
+
+  UpdateCreditCard(id: string, body: ICreditAccountDTO): Observable<boolean> {
+    return this._http.put<boolean>(`/account/debit/${id}`, body);
+  }
+
   CreateCreditCard(body: ICreditAccountDTO): Observable<boolean> {
     return this._http.post<boolean>('/account/credit', body);
+  }
+
+  DeleteAccount(id: string): Observable<boolean> {
+    return this._http.delete<boolean>(`/account/${id}`);
   }
 
 }

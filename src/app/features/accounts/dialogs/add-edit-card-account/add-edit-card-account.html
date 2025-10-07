@@ -1,3 +1,5 @@
+<p-confirmpopup />
+
 <div class="flex flex-col gap-4 w-full">
   <p-float-label variant="on" class="mt-2">
     <p-inputnumber [(ngModel)]="balance" inputId="balance_input" mode="currency" currency="USD" locale="en-US"
@@ -85,7 +87,18 @@
 
 <p-divider />
 
-<div class="flex justify-end gap-4">
-  <button pButton label="Cancelar" severity="secondary"></button>
-  <button pButton label="Guardar" severity="primary" (click)="saveChanges()"></button>
+<div class="flex flex-row items-center w-full" [ngClass]="{ 'justify-end' : action === 'Agregar',
+  'justify-between' : action === 'Editar'
+ }">
+  @if (action === 'Editar') {
+  <div>
+    <p-button (onClick)="showDialogDelete($event)" severity="danger" rounded [text]="true" icon="pi pi-trash"
+      [outlined]="true" />
+  </div>
+  }
+
+  <div class="flex justify-end gap-4">
+    <p-button label="Cancelar" severity="secondary" (click)="dialogService.close(false)" />
+    <p-button label="Guardar" severity="primary" (click)="saveChanges()" />
+  </div>
 </div>
