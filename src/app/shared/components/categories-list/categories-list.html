@@ -1,11 +1,11 @@
 <p-float-label variant="on">
   <p-select id="input_selected_category"
-    [options]="commonService.categoryTypeList(transactionType) ? categoriesSpendList : categoriesIncomesList" size="large"
-    [(ngModel)]="selectedCategory" optionLabel="categoryName" fluid appendTo="body" showClear>
+    [options]="commonService.categoryTypeList(transactionType) ? categoriesSpendList : categoriesIncomesList"
+    size="large" [(ngModel)]="selectedCategory" (onChange)="selectedCategoryEvent()" optionLabel="categoryName" fluid
+    appendTo="body" showClear>
     <ng-template pTemplate="item" let-item>
       <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined rounded-md p-2"
-          [ngClass]="item.iconColor | iconColorClass">
+        <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.iconColor | iconColorClass">
           {{ item.iconLabel }}
         </span>
 
