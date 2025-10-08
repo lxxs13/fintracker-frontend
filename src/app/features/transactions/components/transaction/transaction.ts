@@ -12,6 +12,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
+import { SplitButtonModule } from 'primeng/splitbutton';
 import { forkJoin, map, catchError, of, finalize } from 'rxjs';
 import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { TransactionService } from '../../services/transaction';
@@ -32,6 +33,7 @@ import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
     ButtonModule,
     SelectButtonModule,
     DatePickerModule,
+    SplitButtonModule,
     AccordionModule,
     MenuModule,
     TooltipModule,
