@@ -1,0 +1,118 @@
+@if (!successfulRegisterProcess) {
+<form [formGroup]="registerFormGroup" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full">
+  <div class="flex flex-col gap-0.5">
+    <p-float-label variant="on">
+      <input pInputText id="username" placeholder="Nombre completo" formControlName="userfullname" [invalid]="
+            registerFormGroup.get('userfullname')?.invalid &&
+            (registerFormGroup.get('userfullname')?.touched || registerFormGroup.get('userfullname')?.dirty)" required
+        fluid />
+      <label for="username">Nombre completo</label>
+    </p-float-label>
+
+    @if (registerFormGroup.get('userfullname')?.hasError('required') &&
+    (registerFormGroup.get('userfullname')?.touched || registerFormGroup.get('userfullname')?.dirty)) {
+    <p-message severity="error" size="small" variant="simple">Este campo es obligatorio.</p-message>
+    }
+  </div>
+
+  <div class="flex flex-col gap-0.5">
+    <p-float-label variant="on">
+      <input pInputText id="ipt_email" type="email" formControlName="email" [invalid]="
+            registerFormGroup.get('email')?.invalid &&
+            (registerFormGroup.get('email')?.touched || registerFormGroup.get('email')?.dirty)
+          " required fluid />
+      <label for="ipt_email">Correo electrónico</label>
+    </p-float-label>
+
+    @if (registerFormGroup.get('email')?.hasError('required') && (registerFormGroup.get('email')?.touched ||
+    registerFormGroup.get('email')?.dirty)) {
+    <p-message severity="error" size="small" variant="simple">El correo es obligatorio.</p-message>
+    }
+    @if (registerFormGroup.get('email')?.hasError('email')) {
+    <p-message severity="error" size="small" variant="simple">Debe ser un correo válido.</p-message>
+    }
+  </div>
+
+  <div class="flex flex-col gap-0.5">
+    <p-float-label variant="on">
+      <p-password id="ipt_password" formControlName="password" autocomplete="off" fluid appendTo="body"
+        weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" promptLabel="Ingrese una contraseña" toggleMask
+        [invalid]="
+            registerFormGroup.get('password')?.invalid &&
+            (registerFormGroup.get('password')?.touched || registerFormGroup.get('password')?.dirty)">
+        <ng-template #footer>
+          <p-divider />
+          <ul class="pl-2 my-0 leading-normal text-sm">
+            <li>Al menos una letra minúscula</li>
+            <li>Al menos una letra mayúscula</li>
+            <li>Al menos un número</li>
+            <li>Mínimo 8 caracteres</li>
+          </ul>
+        </ng-template>
+      </p-password>
+      <label for="ipt_password">Contraseña</label>
+    </p-float-label>
+
+    @if (registerFormGroup.get('password')?.hasError('required') && (registerFormGroup.get('password')?.touched ||
+    registerFormGroup.get('password')?.dirty)) {
+    <p-message severity="error" size="small" variant="simple">La contraseña es obligatoria.</p-message>
+    }
+  </div>
+
+  <div class="flex flex-col gap-0.5">
+    <p-float-label variant="on">
+      <p-password id="ipt_confirmPassword" formControlName="confirmPassword" fluid toggleMask [feedback]="false"
+        [invalid]="
+            (registerFormGroup.hasError('passwordsMismatch') &&
+            registerFormGroup.get('confirmPassword')?.touched) ||
+            (registerFormGroup.get('confirmPassword')?.hasError('required') &&
+            registerFormGroup.get('confirmPassword')?.touched)
+          " />
+      <label for="ipt_confirmPassword">Confirmar contraseña</label>
+    </p-float-label>
+
+    @if (registerFormGroup.get('confirmPassword')?.hasError('required') &&
+    (registerFormGroup.get('confirmPassword')?.hasError('required') &&
+    registerFormGroup.get('confirmPassword')?.touched)) {
+    <p-message severity="error" size="small" variant="simple">Este campo es obligatorio.</p-message>
+    }
+    @if (registerFormGroup.hasError('passwordsMismatch') &&
+    registerFormGroup.get('confirmPassword')?.touched) {
+    <p-message severity="error" size="small" variant="simple">Las contraseñas no coinciden.</p-message>
+    }
+  </div>
+
+  @if (hasError) {
+  <p-message severity="error" size="small">
+    {{ messageError }}
+  </p-message>
+  }
+
+  <button pButton severity="primary" type="submit" [disabled]="isRegisterInProcess">
+    <span pButtonLabel>Registrarse</span>
+  </button>
+
+  <p class="text-center">
+    Regresar a
+    <a (click)="returnLoginPage()" class="text-violet-400 underline cursor-pointer">
+      iniciar sesión
+    </a>
+  </p>
+</form>
+} @else {
+<div class="flex flex-col w-full items-center gap-2 animate-fade-in">
+  <div>
+    <span class="material-symbols-outlined !text-[30px] rounded-4xl p-2" [ngClass]="'green' | iconColorClass">
+      check
+    </span>
+  </div>
+
+  <p class="text-center text-2xl font-bold">Bienvenido, {{ userfullname }}</p>
+  <p class="text-center">Juntos lograremos que tus finanzas estén siempre bajo control. </p>
+
+  <p-button (onClick)="route.navigateByUrl('/dashboard')" class="mt-4 inline-block  px-6 py-2 rounded-lg font-medium cursor-pointer">
+    Ir al Dashboard
+  </p-button>
+
+</div>
+}

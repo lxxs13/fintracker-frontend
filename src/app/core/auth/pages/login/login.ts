@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,11 +8,9 @@ import { DividerModule } from 'primeng/divider';
 import { MessageModule } from 'primeng/message';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { Login } from "../../components/login/login";
+import { Register } from "../../components/register/register";
 
-import { AuthService } from '../../services/auth';
-import { ILoginDTO } from '../../../../models/DTOS/ILoginDTO';
-import { CommonModule } from '@angular/common';
-import { ILoginResponse } from '../../../../models/responses/ILoginResponse';
 
 @Component({
   selector: 'fintracker-login',
@@ -26,79 +24,13 @@ import { ILoginResponse } from '../../../../models/responses/ILoginResponse';
     CardModule,
     FormsModule,
     CommonModule,
-  ],
+    Login,
+    Register,
+],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
-  private _formBuilder = inject(FormBuilder)
-  private _authService = inject(AuthService);
-  private _router = inject(Router);
-
-  formGroupLogin!: FormGroup;
-
-  formSubmitted = false;
-  isLoginInProcess: boolean = false;
-  showLoginError: boolean = false;
-
-  errorMessage: string = '';
-
-  ngOnInit(): void {
-    this.formGroupLogin = this._formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
-  }
-
-  onSubmit(): void {
-    this.showLoginError = false;
-    this.isLoginInProcess = true;
-    this.formSubmitted = true;
-    this.formGroupLogin.clearValidators();
-    this.formGroupLogin.disable();
-
-    if (this.formGroupLogin.invalid) {
-      this.formGroupLogin.markAllAsDirty();
-      this.formSubmitted = false;
-      this.isLoginInProcess = false;
-
-      return;
-    }
-
-    const loginData: ILoginDTO = {
-      email: this.formGroupLogin.get('email')!.value,
-      password: this.formGroupLogin.get('password')!.value,
-    };
-
-    this._authService.login(loginData).subscribe({
-      next: (response: ILoginResponse) => {
-        this.formSubmitted = false;
-
-        const { userFullName, accessToken } = response;
-
-        localStorage.setItem('userName', userFullName);
-        localStorage.setItem('token', accessToken);
-
-        setTimeout(() => {
-          this.isLoginInProcess = false;
-
-          this._router.navigateByUrl('/dashboard')
-        }, 3000);
-      },
-      error: (err) => {
-        console.log(err);
-
-        this.errorMessage = err.error.message;
-        this.showLoginError = true;
-        this.formGroupLogin.enable();
-        this.isLoginInProcess = false;
-      }
-    })
-  }
-
-  isInvalid(controlName: string): boolean | undefined {
-    const control = this.formGroupLogin.get(controlName);
-
-    return !!(control && control?.invalid && (control.dirty || control.touched));
-  }
+  formType: number = 0;
 }

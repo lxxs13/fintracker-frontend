@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 
 @Component({
@@ -11,18 +12,28 @@ import { MenubarModule } from 'primeng/menubar';
     MenubarModule,
     AvatarModule,
     InputTextModule,
+    MenuModule,
   ],
   templateUrl: './header.html',
 })
 export class HeaderComponent {
   private _router = inject(Router);
 
-  items: MenuItem[] | undefined;
+  headerMenuItems: MenuItem[] | undefined;
+  userMenuItems: MenuItem[] | undefined;
 
   initialsUserName: string = 'LS';
 
   ngOnInit() {
-    this.items = [
+    this.userMenuItems = [
+      {
+        label: 'Cerrar Sesión',
+        icon: 'pi pi-sign-out',
+        routerLink: '/',
+      },
+    ];
+
+    this.headerMenuItems = [
       {
         label: 'Inicio',
         icon: 'pi pi-home',
@@ -54,9 +65,5 @@ export class HeaderComponent {
         routerLink: 'settings'
       },
     ]
-  }
-
-  handlerRedirect(url: string): void {
-    this._router.navigateByUrl(`${url}`);
   }
 }

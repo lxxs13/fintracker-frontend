@@ -1,0 +1,58 @@
+.fade-in-left {
+  animation: fadeInLeft 300ms ease-out forwards;
+}
+.fade-out-left {
+  animation: fadeOutLeft 200ms ease-in forwards;
+}
+
+.fade-in-rigth {
+  animation: fadeInRigth 300ms ease-out forwards;
+}
+.fade-out-rigth {
+  animation: fadeOutRigth 200ms ease-in forwards;
+}
+
+@keyframes fadeInRigth {
+  from {
+    opacity: 0;
+    transform: translateX(700px);
+  }
+  to {
+    opacity: 40%;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOutRigth {
+  from {
+    opacity: 40%;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(700px);
+  }
+}
+
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-700px);
+  }
+  to {
+    opacity: 40%;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOutLeft {
+  from {
+    opacity: 40%;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-700px);
+  }
+}

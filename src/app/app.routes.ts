@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { canAccessGuard } from './core/guards/can-access-guard';
 
 export const routes: Routes = [
   {
@@ -9,6 +10,8 @@ export const routes: Routes = [
   {
     title: 'Dashboard',
     path: 'dashboard',
+    canActivate: [canAccessGuard],
+    canActivateChild: [canAccessGuard],
     loadComponent: () => import('./features/dashboard/pages/main/main').then(c => c.MainPage),
     children: [
       {
@@ -17,6 +20,7 @@ export const routes: Routes = [
       },
       {
         path: 'calendar',
+        title: 'Calendario',
         loadComponent: () => import('./features/calendar/pages/calendar/calendar').then(c => c.CalendarPage),
       },
       {

@@ -18,14 +18,14 @@ export class CommonService {
   ];
 
   esLocale = {
-    dayNames: ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
-    dayNamesShort: ['dom','lun','mar','mié','jue','vie','sáb'],
-    dayNamesMin: ['D','L','M','X','J','V','S'],
+    dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+    dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+    dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
     monthNames: [
-      'enero','febrero','marzo','abril','mayo','junio',
-      'julio','agosto','septiembre','octubre','noviembre','diciembre'
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
     ],
-    monthNamesShort: ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],
+    monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
     today: 'Hoy',
     clear: 'Limpiar',
     weekHeader: 'Sm',
@@ -46,10 +46,18 @@ export class CommonService {
     { id: 3, title: 'Este año' },
   ];
 
+  tokenExpired = (token: string): boolean => {
+    return (Math.floor((new Date).getTime() / 1000)) >= this.timeToExpire(token);
+  }
+
+  timeToExpire(token: string) {
+    return (JSON.parse(atob(token.split('.')[1]))).exp;
+  }
+
   showMessage(summary: string, detail: string, status: string) {
     this._messageService.add({
       closable: true,
-      severity: 'success',
+      severity: status === 'OK' ? 'success' : 'error',
       summary,
       detail,
       life: 5000,
