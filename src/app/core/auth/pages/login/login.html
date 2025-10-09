@@ -1,55 +1,36 @@
 <div class="flex justify-center items-center flex-col w-screen h-screen gap-2">
-  <div class="absolute inset-0 bg-[url('assets/images/finance.svg')]
-  bg-no-repeat bg-size-[35vw] sm:md:lg:bg-bottom-left bg-top mt-32 opacity-40 z-0 pointer-events-none">
+  @if (formType === 0) {
+  <div animate.enter="fade-in-left" animate.leave="fade-out-left"  class="absolute inset-0 bg-[url('assets/images/finance.svg')]
+  bg-no-repeat bg-size-[35vw] sm:md:lg:bg-bottom-left bg-top mt-20 opacity-40 z-0 pointer-events-none">
   </div>
+  } @else {
+  <div animate.enter="fade-in-rigth" animate.leave="fade-out-rigth" class="absolute inset-0 bg-[url('assets/images/sign-up.svg')]
+  bg-no-repeat bg-size-[35vw] sm:md:lg:bg-bottom-right bg-top mt-20 opacity-40 z-0 pointer-events-none">
+  </div>
+  }
 
   <p-card class="!h-min !bg-transparent !border-none !shadow-none">
     <div class="w-[30rem] flex flex-col justify-center items-center overflow-hidden
-    rounded-2xl p-6 bg-white/10 backdrop-blur-xs ring-1 ring-white/15">
+      rounded-2xl p-6 bg-white/10 backdrop-blur-xs ring-1 ring-white/15">
       <h1 class="text-4xl text-center">Fin Tracker</h1>
 
+      @if (formType === 0) {
       <p-divider align="center">
         <b>Inicia sesión</b>
       </p-divider>
-
-      <form [formGroup]="formGroupLogin" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full">
-        <div class="flex flex-col gap-1">
-          <input pInputText fluid type="email" id="email" placeholder="Correo Electrónico" formControlName="email"
-            [invalid]="isInvalid('email')" />
-
-          @if (isInvalid('email') && formGroupLogin.get('email')?.errors?.['required']) {
-          <p-message severity="error" size="small" variant="simple">
-            Este campo es obligatorio.
-          </p-message>
-          }
-
-          @if (isInvalid('email') && formGroupLogin.get('email')?.errors?.['email']) {
-          <p-message severity="error" size="small" variant="simple">
-            El correo electrónico ingresado no es válido.
-          </p-message>
-          }
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <p-password fluid placeholder="Contraseña" id="password" formControlName="password" [feedback]="false"
-            autocomplete="off" [toggleMask]="true" [invalid]="isInvalid('password')" />
-
-          @if (isInvalid('password') && formGroupLogin.get('password')?.errors?.['required']) {
-          <p-message severity="error" size="small" variant="simple">
-            Este campo es obligatorio.
-          </p-message>
-          }
-        </div>
-        <button pButton severity="primary" type="submit" [disabled]="isLoginInProcess">
-          <span pButtonLabel>{{ isLoginInProcess ? 'Validando Datos. Por favor, espere...' : "Ingresar" }}</span>
-        </button>
-      </form>
-
-      @if (showLoginError) {
-      <p-message severity="error" class="pt-4 w-full">
-        <p class="text-center">{{ errorMessage }}</p>
-      </p-message>
+      } @else {
+      <p-divider align="center">
+        <b>Registro de usuario</b>
+      </p-divider>
       }
+
+      <div class="w-full">
+        @if (formType === 0) {
+        <fintracker-login-component (goToRegister)=" formType=$event"/>
+        } @else {
+        <fintracker-register-component (goToLogin)="formType = $event"/>
+        }
+      </div>
     </div>
   </p-card>
 </div>

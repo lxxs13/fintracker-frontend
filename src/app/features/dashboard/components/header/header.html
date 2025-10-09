@@ -1,10 +1,12 @@
 <div class="card w-full">
-  <p-menubar [model]="items">
+  <p-menubar [model]="headerMenuItems">
     <ng-template #end>
       <div class="flex items-center gap-2">
         <p-avatar [label]="initialsUserName" [style]="{ 'background-color': '#ece9fc', color: '#2a1261', width: '40px', height: '40px'}"
-          shape="circle" />
+          shape="circle" class="hover:cursor-pointer" (click)="menu.toggle($event)"  />
       </div>
     </ng-template>
   </p-menubar>
+
+  <p-menu #menu [popup]="true" [model]="userMenuItems"></p-menu>
 </div>

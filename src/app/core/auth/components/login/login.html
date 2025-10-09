@@ -1,0 +1,44 @@
+<form [formGroup]="formGroupLogin" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full">
+  <div class="flex flex-col gap-1">
+    <input pInputText fluid type="email" id="email" placeholder="Correo Electrónico" formControlName="email"
+      [invalid]="isInvalid('email')" />
+
+    @if (isInvalid('email') && formGroupLogin.get('email')?.errors?.['required']) {
+    <p-message severity="error" size="small" variant="simple">
+      Este campo es obligatorio.
+    </p-message>
+    }
+
+    @if (isInvalid('email') && formGroupLogin.get('email')?.errors?.['email']) {
+    <p-message severity="error" size="small" variant="simple">
+      El correo electrónico ingresado no es válido.
+    </p-message>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <p-password fluid placeholder="Contraseña" id="password" formControlName="password" [feedback]="false"
+      autocomplete="off" [toggleMask]="true" [invalid]="isInvalid('password')" />
+
+    @if (isInvalid('password') && formGroupLogin.get('password')?.errors?.['required']) {
+    <p-message severity="error" size="small" variant="simple">
+      Este campo es obligatorio.
+    </p-message>
+    }
+  </div>
+
+  @if (showLoginError) {
+  <p-message severity="error" class="w-full">
+    <p class="text-center">{{ errorMessage }}</p>
+  </p-message>
+  }
+
+  <button pButton severity="primary" type="submit" [disabled]="isLoginInProcess">
+    <span pButtonLabel>{{ isLoginInProcess ? 'Validando Datos. Por favor, espere...' : "Ingresar" }}</span>
+  </button>
+
+  <p class="text-center">
+    ¿Aún no tienes una cuenta? <a (click)="goToRegistarPage()"
+      class="text-violet-400 underline cursor-pointer">Regístrate aquí</a>
+  </p>
+</form>
