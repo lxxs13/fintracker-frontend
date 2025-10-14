@@ -40,7 +40,7 @@ export class SummaryComponent implements OnInit {
   }
 
   getSummaryByMonth(): void {
-    this._transactionService.GetSummaryByMonth().subscribe({
+    this._transactionService.getSummaryByMonth().subscribe({
       next: (response: any) => {
         this.thisMonth = response.byCategory;
         console.log(response);

@@ -114,18 +114,30 @@
         @if (isLoading) {
         <p-skeleton width="8rem" height="2rem" />
         } @else {
+        @if (totalTrasactions > 0) {
         <p class="italic">
           {{ totalTrasactions }} {{ totalTrasactions === 1 ? 'transacción' : 'transacciones' }}
         </p>
+        }
         }
 
         @if (isLoading) {
         <p-skeleton width="7rem" height="2rem" />
 
         } @else {
-        <p>
-          {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
-        </p>
+        <div class="flex flex-col justify-end items-end">
+          @if (totalSpent > 0) {
+          <p>
+            Gastos: {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
+          </p>
+          }
+
+          @if (totalIncome > 0) {
+          <p>
+            Ingresos: {{ totalIncome | currency:'USD':'symbol':'1.2-2':'en-US' }}
+          </p>
+          }
+        </div>
         }
       </div>
 
@@ -157,7 +169,8 @@
 
             <div class="flex flex-row justify-end items-end gap-2">
               <div class="flex flex-col">
-                <p class="text-base"> {{ item.amount | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+                <p class="text-base" [ngClass]="{ 'text-green-300': item.amount > 0, 'text-red-300': item.amount < 0}">
+                  {{ getAbsAmount(item.amount) | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
                 <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
               </div>
 

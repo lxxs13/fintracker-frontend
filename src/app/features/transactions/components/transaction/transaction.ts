@@ -13,7 +13,7 @@ import { MenuModule } from 'primeng/menu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { forkJoin, map, catchError, of, finalize } from 'rxjs';
+import { forkJoin, map, catchError, of } from 'rxjs';
 import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { TransactionService } from '../../services/transaction';
 import { ITransactionList, ITransactionsListResponse } from '../../../../models/responses/ITransactionsListResponse';
@@ -68,10 +68,11 @@ export class Transaction implements OnDestroy, OnInit {
 
   rangeDates: Date[] = [];
 
-  transactionTypeSelected: string = '';
+  transactionTypeSelected: number = 0;
 
   totalTrasactions: number = 0;
   totalSpent: number = 0;
+  totalIncome: number = 0;
 
   isLoading: boolean = false;
 
@@ -92,6 +93,10 @@ export class Transaction implements OnDestroy, OnInit {
     if (this.dialogRef) this.dialogRef.close();
   }
 
+  getAbsAmount = (amount: number) => {
+    return Math.abs(amount)
+  }
+
   initTransacionTypesList(): void {
     this._commonService.stateOptions.forEach(option => {
       this.transactionItems.push({
@@ -109,11 +114,12 @@ export class Transaction implements OnDestroy, OnInit {
   getTransactionsList(filter?: ITransactionsFilterDTO): void {
     this.isLoading = true;
 
-    this._transactionService.GetTransactions(filter).subscribe({
+    this._transactionService.getTransactions(filter).subscribe({
       next: (response: ITransactionsListResponse) => {
-        const { total, spentTotal, transactionList } = response;
+        const { totalDocuments: total, spentTotal, incomeTotal: totalIncome, transactionList } = response;
         this.totalTrasactions = total;
         this.totalSpent = spentTotal;
+        this.totalIncome = totalIncome;
         this.transactionList = transactionList;
       },
       error: (err) => {

@@ -21,7 +21,7 @@ import { CommonService } from '../../services/common';
   styleUrl: './categories-list.css'
 })
 export class CategoriesListComponent implements OnInit {
-  @Input() transactionType: string = '';
+  @Input() transactionType: number = 0;
   @Output() selectedCategoryOutput: EventEmitter<ICategories> = new EventEmitter<ICategories>();
 
   private _categoryService = inject(CategoriesService);

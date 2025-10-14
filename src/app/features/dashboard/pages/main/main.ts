@@ -75,7 +75,7 @@ export class MainPage implements OnInit, OnDestroy {
     });
   }
 
-  showMenuOption(title: string, transactionType: string) {
+  showMenuOption(title: string, transactionType: number) {
     this.dialogMenuRef = this._dialogService.open(TransactionTypeComponent, {
       modal: false,
       closable: true,

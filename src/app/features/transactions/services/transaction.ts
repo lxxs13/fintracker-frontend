@@ -11,7 +11,7 @@ import { ITransactionsFilterDTO } from '../../../models/ITransactionsFilterDTO';
 export class TransactionService {
   private _http = inject(HttpClient);
 
-  GetTransactions(filter?: ITransactionsFilterDTO): Observable<ITransactionsListResponse> {
+  getTransactions(filter?: ITransactionsFilterDTO): Observable<ITransactionsListResponse> {
     let httpParams = new HttpParams();
 
     if(filter?.startDate && filter?.endDate) {
@@ -22,16 +22,21 @@ export class TransactionService {
     return this._http.get<ITransactionsListResponse>(`/transaction?${httpParams.toString()}`);
   }
 
-  GetSummaryByMonth() {
+  getSummaryByMonth() {
     return this._http.get('/transaction/thisMonth');
   }
 
-  GetAvailableToSpend(): Observable<number> {
+  //FIX: REVISAR POR QUÉ LLAMO AL ENDPOINT DE ACCOUNT
+  getAvailableToSpend(): Observable<number> {
     return this._http.get<number>('/account/summary');
   }
 
-  CreateTransaction(transactionInfo: ITransactionDTO) {
-    return this._http.post('/transaction', transactionInfo);
+  createIncomeSpentTransaction(transactionInfo: ITransactionDTO) {
+    return this._http.post('/transaction/incomeSpentTransaction', transactionInfo);
+  }
+
+  createTransferTransaction(transactionInfo: ITransactionDTO) {
+    return this._http.post('/transaction/createTransferTransaction', transactionInfo);
   }
 
 }

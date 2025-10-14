@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { ITransactionsOptions } from '../../models/ITransactionsOptionsDTO';
+import { ETransactionType } from '../../enums/TransactionsTypes';
 
 @Injectable({
   providedIn: 'root',
@@ -7,14 +9,20 @@ import { MessageService } from 'primeng/api';
 export class CommonService {
   private _messageService = inject(MessageService);
 
-  stateOptions: any[] = [
-    { icon: 'pi-shopping-cart', label: 'Gasto', value: 'spent', desc: 'Registra una compra o un pago que hiciste, como supermercado, gasolina o restaurante.' },
-    { icon: 'pi-receipt', label: 'Pago', value: 'payment', desc: 'Registra un pago que necesites hacer, como suscripciones, renta o servicios.' },
-    { icon: 'pi-arrow-right', label: 'Ingreso', value: 'incomnig', desc: 'Registra tu salario, bonos, freelance u otros ingresos que recibas.' },
-    { icon: 'pi-arrow-right-arrow-left', label: 'Transferencia', value: 'transfer', desc: 'Registra movimientos entre cuentas, como transferencia de cuenta de cheques a ahorro.' },
-    { icon: 'pi-arrow-circle-left', label: 'Reembolso', value: 'refound', desc: 'Registra un reembolso o una devolución que recibiste, como la devolución de un producto o cashback.' },
-    { icon: 'pi-list-check', label: 'Compra a meses', value: 'purshaseMonthly', desc: 'Registra una compra a meses con tarjeta de crédito.' },
-    { icon: 'pi-credit-card', label: 'Pago de tarjeta', value: 'cardPayment', desc: 'Registra un pago realizado a tu tarjeta de crédito.' },
+  stateOptions: ITransactionsOptions[] = [
+    { icon: 'pi-shopping-cart', label: 'Gasto', value: 1, desc: 'Registra una compra o un pago que hiciste, como supermercado, gasolina o restaurante.' },
+    // { icon: 'pi-receipt', label: 'Pago', value: 2, desc: 'Registra un pago que necesites hacer, como suscripciones, renta o servicios.' },
+    { icon: 'pi-arrow-right', label: 'Ingreso', value: 3, desc: 'Registra tu salario, bonos, freelance u otros ingresos que recibas.' },
+    { icon: 'pi-arrow-right-arrow-left', label: 'Transferencia', value: 4, desc: 'Registra movimientos entre cuentas, como transferencia de cuenta de cheques a ahorro.' },
+    // { icon: 'pi-arrow-circle-left', label: 'Reembolso', value: 5, desc: 'Registra un reembolso o una devolución que recibiste, como la devolución de un producto o cashback.' },
+    // { icon: 'pi-list-check', label: 'Compra a meses', value: 6, desc: 'Registra una compra a meses con tarjeta de crédito.' },
+    // { icon: 'pi-credit-card', label: 'Pago de tarjeta', value: 7, desc: 'Registra un pago realizado a tu tarjeta de crédito.' },
+  ];
+
+  periods = [
+    { label: 'Semanal', value: 'weekly' },
+    { label: 'Cada 2 semanas', value: 'biweekly' },
+    { label: 'Cada mes', value: 'monthly' },
   ];
 
   esLocale = {
@@ -65,8 +73,8 @@ export class CommonService {
     });
   }
 
-  categoryTypeList(type: string): boolean {
-    const allowed = ['spent', 'payment', 'purshaseMonthly'];
+  categoryTypeList(type: number): boolean {
+    const allowed = [ETransactionType.SPENT, ETransactionType.PAYMENT, ETransactionType.PURCHASE_MONTHLY];
     return allowed.includes(type);
   }
 
