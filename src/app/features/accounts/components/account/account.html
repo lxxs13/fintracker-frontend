@@ -18,7 +18,7 @@
           @for (item of remappedAccountsList; track $index) {
           <p-card>
             <ng-template #title>
-              <div class="flex flex-row justify-between w-ful">
+              <div class="flex flex-row justify-between w-full">
                 <span>{{ item.type }}</span>
                 <span>{{ remappedAccountsList[$index].totalBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
               </div>
@@ -26,7 +26,7 @@
 
             <p-divider />
 
-            <div class="flex flex-col w-full gap-1">
+            <div class="flex flex-col w-full gap-2">
               @for (item of remappedAccountsList[$index].accounts; track $index) {
               <p-button fluid severity="secondary" (onClick)="show('Editar', this.selectedTab, item)">
                 <ng-template #content>
