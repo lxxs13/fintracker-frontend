@@ -59,16 +59,19 @@ export class AddEditCardAccountComponent implements OnInit {
     },
   ];
 
-  balance: number | undefined;
+
   lastDigits: number | undefined;
   creditCardLimit: number | undefined;
   APR: number | undefined;
   paymentDueDay: number | undefined;
   statementCloseDay: number | undefined;
-  selectedAccountType: number = 0;
+
   description: string = '';
   action: string = '';
+
+  balance: number = 0;
   type: number = 0;
+  selectedAccountType: number = 0;
 
   item: IAccount | undefined;
 
@@ -137,7 +140,7 @@ export class AddEditCardAccountComponent implements OnInit {
       next: (response) => {
         if (!response) return; //FIX: AGREGAR MENSAJES DE ERROR
 
-        this._commonService.showMessage('Cuenta creada con éxito', 'La cuenta de débito se ha agregado correctamente', 'ok');
+        this._commonService.showMessage('Cuenta creada con éxito', 'La cuenta de débito se ha agregado correctamente', 'OK');
 
         this.dialogService.close(true);
       },
@@ -148,12 +151,10 @@ export class AddEditCardAccountComponent implements OnInit {
   }
 
   saveDebitCard(): void {
-    if (!this.balance) return;
-
     if (!this.accountsType) return;
 
     const body: IDebitAccountDTO = {
-      balance: this.balance,
+      balance: this.balance ?? 0,
       description: this.description,
       accountType: +this.selectedAccountType
     };
@@ -162,7 +163,7 @@ export class AddEditCardAccountComponent implements OnInit {
       next: (response) => {
         if (!response) return; //FIX: AGREGAR MENSAJES DE ERROR
 
-        this._commonService.showMessage('Cuenta creada con éxito', 'La cuenta de débito se ha agregado correctamente', 'ok');
+        this._commonService.showMessage('Cuenta creada con éxito', 'La cuenta de débito se ha agregado correctamente', 'OK');
 
         this.dialogService.close(true);
       },
@@ -189,7 +190,7 @@ export class AddEditCardAccountComponent implements OnInit {
       next: (response) => {
         if (!response) return; //FIX: AGREGAR MENSAJES DE ERROR
 
-        this._commonService.showMessage('Cuenta actualizada con éxito', 'La cuenta de débito se ha agregado correctamente', 'ok');
+        this._commonService.showMessage('Cuenta actualizada con éxito', 'La cuenta de débito se ha agregado correctamente', 'OK');
 
         this.dialogService.close(true);
       },
@@ -221,7 +222,7 @@ export class AddEditCardAccountComponent implements OnInit {
       next: (response) => {
         if (!response) return; //FIX: AGREGAR MENSAJES DE ERROR
 
-        this._commonService.showMessage('Cuenta actualizada con éxito', 'La cuenta de débito se ha agregado correctamente', 'ok');
+        this._commonService.showMessage('Cuenta actualizada con éxito', 'La cuenta de débito se ha agregado correctamente', 'OK');
 
         this.dialogService.close(true);
       },
