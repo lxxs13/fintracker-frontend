@@ -20,7 +20,9 @@
       </div>
     </div>
   </p-card>
-
+  @if (thisMonth.length === 0) {
+    <fintracker-data-not-found/>
+  } @else {
   @for (item of thisMonth; track $index) {
   <p-card class="!bg-[var(--p-surface-950)] !p-0 max-w-full">
     <ng-template #content>
@@ -44,20 +46,11 @@
             <p> {{ item.txCount }} {{ item.txCount === 1 ? 'transacción' : 'transacciones' }}</p>
             <p> {{ item.totalSpent | currency:'USD':'symbol':'1.2-2':'en-US'}}</p>
           </div>
-
-
         </div>
-
-
-
       </div>
-
     </ng-template>
-
-
   </p-card>
   }
 
-
-
+  }
 </div>

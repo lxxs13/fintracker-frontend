@@ -11,6 +11,7 @@ import { IAccount, IAccountsListResponse } from '../../../../models/responses/ID
 import { EAccountType, EAccountTypeMapperText, IDebitAccountGroup } from '../../../../enums/AccountTypes';
 import { AddEditCardAccountComponent } from '../../dialogs/add-edit-card-account/add-edit-card-account';
 import { CommonService } from '../../../../shared/services/common';
+import { DataNotFoundComponent } from "../../../../shared/components/data-not-found/data-not-found";
 
 @Component({
   selector: 'fintracker-account-component',
@@ -22,6 +23,7 @@ import { CommonService } from '../../../../shared/services/common';
     ButtonModule,
     ProgressBarModule,
     CurrencyPipe,
+    DataNotFoundComponent
 ],
   templateUrl: './account.html',
   providers: [

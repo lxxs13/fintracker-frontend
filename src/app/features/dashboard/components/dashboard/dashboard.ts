@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getAvailableToSpend(): void {
-    this._transactionService.GetAvailableToSpend().subscribe({
+    this._transactionService.getAvailableToSpend().subscribe({
       next: (response) => {
         this.currentBalance = response;
       }
@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getSummaryByMonth(): void {
-    this._transactionService.GetSummaryByMonth().subscribe({
+    this._transactionService.getSummaryByMonth().subscribe({
       next: (response: any) => {
 
         this.thisMonth = this.thisMonth.map(card =>

@@ -4,6 +4,9 @@ export interface ITransactionDTO {
   transactionDate: Date;
   categoryId: string;
   notes: string;
-  accountId: string;
+  accountId?: string;
+  originAccount?: string;
+  destinyAccount?: string;
   transactionType: number;
 }
+

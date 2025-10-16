@@ -2,8 +2,9 @@ import { ICategories } from "./ICategoriesListResponse";
 import { IAccount } from "./IDebitAccountsResponse";
 
 export interface ITransactionsListResponse {
-  total:           number;
+  totalDocuments:  number;
   spentTotal:      number;
+  incomeTotal:     number;
   transactionList: ITransactionList[];
 }
 

@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { SelectModule } from 'primeng/select';
 import { IconColorClassPipe } from '../../pipes/icon-color-class-pipe';
 import { ICategories, ICategoriesListResponse } from '../../../models/responses/ICategoriesListResponse';
 import { CategoriesService } from '../../../features/settings/services/categories';
 import { CommonService } from '../../services/common';
-import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'fintracker-categories-list',
@@ -18,10 +18,9 @@ import { SelectModule } from 'primeng/select';
     IconColorClassPipe,
   ],
   templateUrl: './categories-list.html',
-  styleUrl: './categories-list.css'
 })
 export class CategoriesListComponent implements OnInit {
-  @Input() transactionType: string = '';
+  @Input() transactionType: number = 0;
   @Output() selectedCategoryOutput: EventEmitter<ICategories> = new EventEmitter<ICategories>();
 
   private _categoryService = inject(CategoriesService);
@@ -40,7 +39,10 @@ export class CategoriesListComponent implements OnInit {
         this.categoriesSpendList = categoriesSpent;
       }
     });
+  }
 
+  selectedCategoryEvent(): void {
+    this.selectedCategoryOutput.emit(this.selectedCategory);
   }
 
 }

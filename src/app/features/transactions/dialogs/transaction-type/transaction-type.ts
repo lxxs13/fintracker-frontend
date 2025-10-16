@@ -9,16 +9,16 @@ import { SelectModule } from 'primeng/select';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { TransactionService } from '../../services/transaction';
-import { CategoriesService } from '../../../settings/services/categories';
-import { ICategories, ICategoriesListResponse } from '../../../../models/responses/ICategoriesListResponse';
+import { ICategories } from '../../../../models/responses/ICategoriesListResponse';
 import { ITransactionDTO } from '../../../../models/DTOS/ITransactionDTO';
 import { AccountService } from '../../../accounts/services/account';
-import { IconColorClassPipe } from "../../../../shared/pipes/icon-color-class-pipe";
 import { CommonService } from '../../../../shared/services/common';
 import { CategoriesListComponent } from '../../../../shared/components/categories-list/categories-list';
+import { ETransactionType } from '../../../../enums/TransactionsTypes';
 
 @Component({
   selector: 'fintracker-transaction-type',
@@ -35,7 +35,8 @@ import { CategoriesListComponent } from '../../../../shared/components/categorie
     TextareaModule,
     CommonModule,
     CategoriesListComponent,
-],
+    ToggleSwitchModule,
+  ],
   templateUrl: './transaction-type.html',
   providers: [DialogService]
 })
@@ -51,19 +52,27 @@ export class TransactionTypeComponent implements OnInit {
 
   accountsGroup: any[] = [];
   selectedAccount: any;
+  selectedAccountDestiny: any;
+
+  options = this._commonService.stateOptions;
 
   selectedCategory: ICategories | undefined;
 
-  notes: string = '';
-
   dialogRef: DynamicDialogRef | undefined;
 
+  notes: string = '';
   value: string = '';
   desc: string = '';
 
-  transactionType: string = '';
+  transactionType: number = 0;
+
+  isRecurring: boolean = false;
+
+  recurringPeriods = this._commonService.periods;
+  selectedRecurringPeriod: any;
 
   ngOnInit(): void {
+    this.spentDate = new Date();
     this.transactionType = this._dialogConfig.data.transactionType;
 
     this._accountsService.GetDebitCardsByUser().subscribe({
@@ -96,17 +105,29 @@ export class TransactionTypeComponent implements OnInit {
   }
 
   saveChanges(): void {
+    switch (this.transactionType) {
+      case ETransactionType.INCOME:
+      case ETransactionType.SPENT:
+        this.createIncomeSpentTransfer();
+        break;
+      case ETransactionType.TRANSFER:
+        this.createTransferTransaction();
+        break;
+    }
+  }
+
+  createIncomeSpentTransfer(): void {
     const body: ITransactionDTO = {
       balance: this.balance!,
       description: this.desc,
       transactionDate: this.spentDate!,
       categoryId: this.selectedCategory?._id!,
       accountId: this.selectedAccount?._id!,
-      transactionType: this._commonService.categoryTypeList(this.transactionType) ? 1 : 2,
+      transactionType: this.transactionType,
       notes: this.notes,
     };
 
-    this._transtactionService.CreateTransaction(body).subscribe({
+    this._transtactionService.createIncomeSpentTransaction(body).subscribe({
       next: (response) => {
         if (response) {
           this._dialogService.close(true);
@@ -116,5 +137,33 @@ export class TransactionTypeComponent implements OnInit {
         console.error(err)
       }
     })
+  }
+
+  createTransferTransaction(): void {
+    const body: ITransactionDTO = {
+      balance: this.balance!,
+      description: this.desc,
+      transactionDate: this.spentDate!,
+      categoryId: this.selectedCategory?._id!,
+      originAccount: this.selectedAccount?._id!,
+      destinyAccount: this.selectedAccountDestiny._id!,
+      transactionType: this.transactionType,
+      notes: this.notes,
+    };
+
+    this._transtactionService.createTransferTransaction(body).subscribe({
+      next: (response) => {
+        if (response) {
+          this._dialogService.close(true);
+        }
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
+  }
+
+  get ETransactionType(): typeof ETransactionType {
+    return ETransactionType;
   }
 }

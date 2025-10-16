@@ -12,7 +12,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
-import { forkJoin, map, catchError, of, finalize } from 'rxjs';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { forkJoin, map, catchError, of } from 'rxjs';
 import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { TransactionService } from '../../services/transaction';
 import { ITransactionList, ITransactionsListResponse } from '../../../../models/responses/ITransactionsListResponse';
@@ -22,6 +23,7 @@ import { AccountService } from '../../../accounts/services/account';
 import { CommonService } from '../../../../shared/services/common';
 import { ICategories } from '../../../../models/responses/ICategoriesListResponse';
 import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
+import { DataNotFoundComponent } from "../../../../shared/components/data-not-found/data-not-found";
 
 @Component({
   selector: 'fintracker-transaction-component',
@@ -32,12 +34,14 @@ import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
     ButtonModule,
     SelectButtonModule,
     DatePickerModule,
+    SplitButtonModule,
     AccordionModule,
     MenuModule,
     TooltipModule,
     SkeletonModule,
     IconColorClassPipe,
-  ],
+    DataNotFoundComponent
+],
   templateUrl: './transaction.html',
   styleUrl: './transaction.css',
   providers: [DialogService]
@@ -66,14 +70,17 @@ export class Transaction implements OnDestroy, OnInit {
 
   rangeDates: Date[] = [];
 
-  transactionTypeSelected: string = '';
+  transactionTypeSelected: number = 0;
 
   totalTrasactions: number = 0;
   totalSpent: number = 0;
+  totalIncome: number = 0;
 
   isLoading: boolean = false;
 
   transactionItems: MenuItem[] = [];
+
+  dataNotFoundMessage: string = 'No se encontraron '
 
   ngOnInit(): void {
     this.getFilters();
@@ -88,6 +95,10 @@ export class Transaction implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     if (this.dialogRef) this.dialogRef.close();
+  }
+
+  getAbsAmount = (amount: number) => {
+    return Math.abs(amount)
   }
 
   initTransacionTypesList(): void {
@@ -107,11 +118,12 @@ export class Transaction implements OnDestroy, OnInit {
   getTransactionsList(filter?: ITransactionsFilterDTO): void {
     this.isLoading = true;
 
-    this._transactionService.GetTransactions(filter).subscribe({
+    this._transactionService.getTransactions(filter).subscribe({
       next: (response: ITransactionsListResponse) => {
-        const { total, spentTotal, transactionList } = response;
+        const { totalDocuments: total, spentTotal, incomeTotal: totalIncome, transactionList } = response;
         this.totalTrasactions = total;
         this.totalSpent = spentTotal;
+        this.totalIncome = totalIncome;
         this.transactionList = transactionList;
       },
       error: (err) => {
