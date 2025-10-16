@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { CalendarComponent } from "../../components/calendar/calendar";
 
 @Component({
   selector: 'fintracker-calendar',
-  imports: [],
+  imports: [CalendarComponent],
   templateUrl: './calendar.html',
   styleUrl: './calendar.css'
 })
