@@ -110,6 +110,9 @@
     </p-card>
 
     <div class="flex flex-col w-full gap-4">
+      @if (totalTrasactions === 0) {
+      <fintracker-data-not-found />
+      } @else {
       <div class="flex flex-row justify-between items-center w-full">
         @if (isLoading) {
         <p-skeleton width="8rem" height="2rem" />
@@ -175,14 +178,15 @@
               </div>
 
               <!-- <div class="hidden group-hover:flex flex-row items-center gap-2 opacity-0 group-hover:opacity-100
-                translate-x-2 group-hover:translate-x-0 transition-all duration-300 ease-in-out">
-                <p-button icon="pi pi-pencil" severity="warn" [rounded]="true" [text]="true" />
-                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" />
-              </div> -->
+                  translate-x-2 group-hover:translate-x-0 transition-all duration-300 ease-in-out">
+                  <p-button icon="pi pi-pencil" severity="warn" [rounded]="true" [text]="true" />
+                  <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" />
+                </div> -->
             </div>
           </div>
         </div>
       </p-card>
+      }
       }
       }
     </div>

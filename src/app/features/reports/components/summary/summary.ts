@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CategoriesListComponent } from "../../../../shared/components/categories-list/categories-list";
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DataNotFoundComponent } from "../../../../shared/components/data-not-found/data-not-found";
 
 @Component({
   selector: 'fintracker-summary',
@@ -23,10 +24,9 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     FloatLabelModule,
     DatePickerModule,
     IconColorClassPipe,
-    CategoriesListComponent
+    DataNotFoundComponent
 ],
   templateUrl: './summary.html',
-  styleUrl: './summary.css'
 })
 export class SummaryComponent implements OnInit {
   private _transactionService = inject(TransactionService);

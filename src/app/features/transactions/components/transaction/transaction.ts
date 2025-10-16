@@ -23,6 +23,7 @@ import { AccountService } from '../../../accounts/services/account';
 import { CommonService } from '../../../../shared/services/common';
 import { ICategories } from '../../../../models/responses/ICategoriesListResponse';
 import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
+import { DataNotFoundComponent } from "../../../../shared/components/data-not-found/data-not-found";
 
 @Component({
   selector: 'fintracker-transaction-component',
@@ -39,7 +40,8 @@ import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
     TooltipModule,
     SkeletonModule,
     IconColorClassPipe,
-  ],
+    DataNotFoundComponent
+],
   templateUrl: './transaction.html',
   styleUrl: './transaction.css',
   providers: [DialogService]
@@ -77,6 +79,8 @@ export class Transaction implements OnDestroy, OnInit {
   isLoading: boolean = false;
 
   transactionItems: MenuItem[] = [];
+
+  dataNotFoundMessage: string = 'No se encontraron '
 
   ngOnInit(): void {
     this.getFilters();

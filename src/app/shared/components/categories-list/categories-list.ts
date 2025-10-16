@@ -18,7 +18,6 @@ import { CommonService } from '../../services/common';
     IconColorClassPipe,
   ],
   templateUrl: './categories-list.html',
-  styleUrl: './categories-list.css'
 })
 export class CategoriesListComponent implements OnInit {
   @Input() transactionType: number = 0;

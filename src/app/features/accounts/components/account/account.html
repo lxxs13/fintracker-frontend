@@ -15,6 +15,9 @@
     <p-tabpanels>
       <p-tabpanel value="0">
         <div class="flex flex-col gap-4">
+          @if (remappedAccountsList.length === 0) {
+          <fintracker-data-not-found />
+          } @else {
           @for (item of remappedAccountsList; track $index) {
           <p-card>
             <ng-template #title>
@@ -42,18 +45,25 @@
             </div>
           </p-card>
           }
+
+          <p-divider />
+
+          <div class="flex justify-end">
+            <p class="p-card-title">
+              Balance total: {{ accountsBalanceTotal | currency:'USD':'symbol':'1.2-2':'en-US' }}
+            </p>
+          </div>
+          }
         </div>
 
-        <p-divider />
 
-        <div class="flex justify-end">
-          <p class="p-card-title"> Balance total: {{ accountsBalanceTotal | currency:'USD':'symbol':'1.2-2':'en-US' }}
-          </p>
-        </div>
       </p-tabpanel>
 
       <p-tabpanel value="1">
         <div class="flex flex-col gap-4">
+          @if (remappedCreditList.length === 0) {
+          <fintracker-data-not-found />
+          } @else {
           @for (item of remappedCreditList; track $index) {
           <p-button severity="secondary" fluid (onClick)="show('Editar', selectedTab, item)">
             <ng-template #content>
@@ -94,13 +104,16 @@
 
           </p-button>
           }
+          <p-divider />
+
+          <div class="flex justify-end">
+            <p class="p-card-title">Balance total: {{ creditCardsBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}
+            </p>
+          </div>
+          }
         </div>
 
-        <p-divider />
 
-        <div class="flex justify-end">
-          <p class="p-card-title">Balance total: {{ creditCardsBalance | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
-        </div>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
