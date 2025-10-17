@@ -1,0 +1,30 @@
+.p-datepicker .p-datepicker-calendar td>span,
+.p-datepicker .p-datepicker-calendar td>button {
+  height: 4.8rem !important;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: start;
+  justify-content: start;
+}
+
+.p-datepicker-day {
+  border-radius: 6px !important;
+}
+
+.p-datepicker-day-selected {
+  /* background: var(--p-surface-00) !important; */
+  color: rgb(255, 255, 255) !important;
+}
+
+.p-datepicker .p-datepicker-calendar td>span,
+.p-datepicker .p-datepicker-calendar td>button {
+  line-height: 0px !important;
+}
+
+.p-datepicker .p-datepicker-calendar td.p-datepicker-today > span,
+.p-datepicker .p-datepicker-calendar td.p-datepicker-today > button {
+  background: var(--p-surface-400) !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}

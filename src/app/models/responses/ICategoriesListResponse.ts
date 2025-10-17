@@ -1,6 +1,7 @@
 export interface ICategoriesListResponse {
   categoriesSpent:  ICategories[];
   categoriesIncome: ICategories[];
+  othersCategories: ICategories[];
 }
 
 export interface ICategories {

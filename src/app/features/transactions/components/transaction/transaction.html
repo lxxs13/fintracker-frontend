@@ -18,177 +18,152 @@
               {{ item.label }}
             </span>
           </div>
-
         </ng-template>
-
       </p-menu>
+
       <p-button (click)="menu.toggle($event)" icon="pi pi-plus" label="Agregar transacción" />
     </div>
   </p-card>
 
-  <div class="flex flex-row w-full gap-4">
-    <p-card class="w-[35vw]">
-      <p class="text-center text-xl pb-2">Filtros de búsqueda</p>
+  <p-card>
+    <div class="flex flex-col md:flex-row gap-2 items-center w-full">
+      <p-float-label variant="on" class="w-full">
+        <p-datepicker id="input_datepicker" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
+          class="w-full" placeholder="Seleccione un rango de fechas" [numberOfMonths]="1" dateFormat="dd/mm/yy" fluid />
+        <label for="input_datepicker">Rango de fechas</label>
+      </p-float-label>
 
-      <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
-        placeholder="Seleccione un rango de fechas" [numberOfMonths]="2" dateFormat="dd/mm/yy" fluid />
-
-      <p-accordion [value]="0" [multiple]="true">
-        <p-accordion-panel value="0">
-          <p-accordion-header>
-            <p class="font-medium">Cuentas</p>
-          </p-accordion-header>
-
-          <p-accordion-content>
-            <div class="flex flex-col gap-4">
-              <div class="flex flex-col gap-2">
-                <p class="font-extralight">Cuentas de débito</p>
-                <p-selectbutton class="w-full pill-select"
-                  [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '.1rem' }" [options]="debitAccountsFilter"
-                  [(ngModel)]="debitAccountSelected" [multiple]="true" optionLabel="categoryName" size="small"
-                  optionValue="_id">
-                  <ng-template pTemplate="item" let-opt>
-                    <div class="flex items-center gap-2">
-                      <span class="material-symbols-outlined rounded-md" [ngClass]="opt.iconColor | iconColorClass">
-                        account_balance_wallet
-                      </span>
-                      <span class="truncate text-xs">
-                        {{ opt.accountName }}
-                      </span>
-                    </div>
-                  </ng-template>
-                </p-selectbutton>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <p class="font-extralight">Tarjetas de crédito</p>
-                <p-selectbutton class="w-full" [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '.1rem' }"
-                  [options]="creditAccoutsFilter" [(ngModel)]="creditAccountSelected" [multiple]="true"
-                  optionLabel="categoryName" optionValue="_id">
-                  <ng-template pTemplate="item" let-opt>
-                    <div class="flex items-center gap-2">
-                      <span class="material-symbols-outlined rounded-md" [ngClass]="opt.iconColor | iconColorClass">
-                        credit_card
-                      </span>
-                      <span class="truncate text-xs">
-                        {{ opt.accountName }}
-                      </span>
-                    </div>
-                  </ng-template>
-                </p-selectbutton>
-              </div>
+      <p-float-label variant="on" class="w-full">
+        <p-multi-select id="input_account" [options]="accountsGroup" [(ngModel)]="selectedAccount" [group]="true"
+          multiple display="chip" selectedItemsLabel="{0} elementos seleccionados" optionValue="_id" optionLabel="label"
+          fluid showClear>
+          <ng-template let-group #group>
+            <div class="flex items-center">
+              <span>{{ group.label }}</span>
             </div>
-          </p-accordion-content>
-        </p-accordion-panel>
+          </ng-template>
+        </p-multi-select>
 
-        <p-accordion-panel value="1">
-          <p-accordion-header>
-            <p class="font-medium">Categorías</p>
-          </p-accordion-header>
+        <label for="input_account">Cuentas</label>
+      </p-float-label>
 
-          <p-accordion-content>
-            <p-selectbutton class="" [style]="{ display: 'flex', 'flex-wrap': 'wrap', gap: '0.5rem' }"
-              [options]="categoriesFilter" [(ngModel)]="categoryFilterSelected" [multiple]="true"
-              optionLabel="categoryName" size="small" optionValue="_id">
-              <ng-template pTemplate="item" let-opt>
-                <div class="flex items-center gap-2 p-1 rounded-sm" [ngClass]="opt.iconColor  | iconColorClass">
-                  <span class="material-symbols-outlined rounded-md !border-none !bg-transparent"
-                    [ngClass]="opt.iconColor  | iconColorClass">
-                    {{ opt.iconLabel }}
-                  </span>
-                  <span class="truncate text-xs mx-2">{{ opt.categoryName }}</span>
-                </div>
-              </ng-template>
-            </p-selectbutton>
-          </p-accordion-content>
-        </p-accordion-panel>
-      </p-accordion>
+      <p-float-label variant="on" class="w-full">
+        <p-multi-select id="input_category" [options]="categoriesFilter" [(ngModel)]="categoryFilterSelected"
+          optionLabel="categoryName" display="chip" selectedItemsLabel="{0} elementos seleccionados" optionValue="_id"
+          optionLabel="categoryName" showClear fluid>
 
-      <div class="pt-2">
-        <p-button label="Filtrar" icon="pi pi-filter" fluid (onClick)="filterData()"></p-button>
-      </div>
-    </p-card>
+          <ng-template pTemplate="item" let-opt>
+            <div class="flex items-center gap-2 p-2 rounded-sm w-full" [ngClass]="opt.iconColor  | iconColorClass">
+              <span class="material-symbols-outlined rounded-md !border-none !bg-transparent"
+                [ngClass]="opt.iconColor  | iconColorClass">
+                {{ opt.iconLabel }}
+              </span>
 
-    <div class="flex flex-col w-full gap-4">
-      @if (totalTrasactions === 0) {
-      <fintracker-data-not-found />
+              <span>{{ opt.categoryName }}</span>
+            </div>
+          </ng-template>
+        </p-multi-select>
+
+        <label for="input_category">Categorías</label>
+      </p-float-label>
+
+
+      <p-button label="Filtrar" icon="pi pi-search" severity="secondary" variant="outlined" (onClick)="filterData()" fluid class="w-full md:w-min"/>
+    </div>
+  </p-card>
+
+  <div class="flex flex-col w-full gap-4">
+    @if (totalTrasactions === 0) {
+    <fintracker-data-not-found />
+    } @else {
+    <div class="flex flex-row justify-between items-center w-full">
+      @if (isLoading) {
+      <p-skeleton width="8rem" height="2rem" />
       } @else {
-      <div class="flex flex-row justify-between items-center w-full">
-        @if (isLoading) {
-        <p-skeleton width="8rem" height="2rem" />
-        } @else {
-        @if (totalTrasactions > 0) {
-        <p class="italic">
-          {{ totalTrasactions }} {{ totalTrasactions === 1 ? 'transacción' : 'transacciones' }}
+      @if (totalTrasactions > 0) {
+      <p class="italic">
+        <!-- FIX: Ajustar el total porque la lsita regresa dos transferencias/pagos a tarjeta, pero solo deben contar como uno -->
+        {{ totalTrasactions }} {{ totalTrasactions === 1 ? 'transacción' : 'transacciones' }}
+      </p>
+      }
+      }
+
+      @if (isLoading) {
+      <p-skeleton width="7rem" height="2rem" />
+      } @else {
+      <div class="flex flex-col justify-end items-end">
+        @if (totalSpent > 0) {
+        <p>
+          Gastos: {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
         </p>
         }
+
+        @if (totalIncome > 0) {
+        <p>
+          Ingresos: {{ totalIncome | currency:'USD':'symbol':'1.2-2':'en-US' }}
+        </p>
         }
 
-        @if (isLoading) {
-        <p-skeleton width="7rem" height="2rem" />
+        @if (transactionsTotal > 0) {
+        <p>
+          Transferencias: {{ transactionsTotal | currency:'USD':'symbol':'1.2-2':'en-US' }}
+        </p>
+        }
 
-        } @else {
-        <div class="flex flex-col justify-end items-end">
-          @if (totalSpent > 0) {
-          <p>
-            Gastos: {{ totalSpent | currency:'USD':'symbol':'1.2-2':'en-US' }}
-          </p>
-          }
-
-          @if (totalIncome > 0) {
-          <p>
-            Ingresos: {{ totalIncome | currency:'USD':'symbol':'1.2-2':'en-US' }}
-          </p>
-          }
-        </div>
+        @if (cardPaymentsTotal > 0) {
+        <p>
+          Pagos a Tarjetas de Crédito: {{ cardPaymentsTotal | currency:'USD':'symbol':'1.2-2':'en-US' }}
+        </p>
         }
       </div>
-
-      @if(isLoading) {
-      @for (item of [1,2,3,4,5]; track item) {
-      <div class="w-full h-[7rem] flex flex-col gap-2">
-        <p-skeleton width="100%" height="7rem" />
-      </div>
-      }
-      }@else {
-      @for (item of transactionList; track item._id) {
-      <p-card class="group flex flex-col gap-4 w-full justify-start items-center !h-min">
-        <ng-template #header>
-          <div class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm">
-            <p class="pl-2 p-1">{{ item.transactionDate | date: 'longDate'}}</p>
-          </div>
-        </ng-template>
-
-        <div class="flex flex-row gap-4 items-center">
-          <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.category.iconColor | iconColorClass">
-            {{ item.category.iconLabel }}
-          </span>
-
-          <div class="flex flex-row justify-between items-center w-full gap-4">
-            <div>
-              <p class="text-base">{{ item.description }}</p>
-              <p class="text-xs font-extralight">{{ item.account.accountName }}</p>
-            </div>
-
-            <div class="flex flex-row justify-end items-end gap-2">
-              <div class="flex flex-col">
-                <p class="text-base" [ngClass]="{ 'text-green-300': item.amount > 0, 'text-red-300': item.amount < 0}">
-                  {{ getAbsAmount(item.amount) | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
-                <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
-              </div>
-
-              <!-- <div class="hidden group-hover:flex flex-row items-center gap-2 opacity-0 group-hover:opacity-100
-                  translate-x-2 group-hover:translate-x-0 transition-all duration-300 ease-in-out">
-                  <p-button icon="pi pi-pencil" severity="warn" [rounded]="true" [text]="true" />
-                  <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" />
-                </div> -->
-            </div>
-          </div>
-        </div>
-      </p-card>
-      }
-      }
       }
     </div>
+
+    @if(isLoading) {
+    @for (item of [1,2,3,4,5]; track item) {
+    <div class="w-full h-[7rem] flex flex-col gap-2">
+      <p-skeleton width="100%" height="7rem" />
+    </div>
+    }
+    }@else {
+    @for (item of transactionList; track item._id) {
+    <p-card class="group flex flex-col gap-4 w-full justify-start items-center !h-min">
+      <ng-template #header>
+        <div
+          class="flex flex-row justify-between items-center py-1.5 w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm">
+          <p class="pl-2 p-1">{{ item.transactionDate | date: 'longDate'}}</p>
+
+          <div class="flex flex-row gap-2 mx-2">
+            <p-button icon="pi pi-pencil" [outlined]="true" severity="warn" rounded size="small" />
+            <p-button icon="pi pi-trash" [outlined]="true" severity="danger" rounded size="small" />
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="flex flex-row gap-4 items-center">
+        <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.category.iconColor | iconColorClass">
+          {{ item.category.iconLabel }}
+        </span>
+
+        <div class="flex flex-row justify-between items-center w-full gap-4">
+          <div>
+            <p class="text-base">{{ item.category.categoryName }}</p>
+            <p class="text-xs font-extralight">{{ item.account.accountName }}</p>
+          </div>
+
+          <div class="flex flex-row justify-end items-end gap-2">
+            <div class="flex flex-col">
+              <p class="text-base" [ngClass]="{ 'text-green-300': (item.amount > 0 || (item.amount < 0 && item.account.accountType === 4))  ,
+                'text-red-300': (item.amount < 0 &&  item.account.accountType !== 4)}">
+                {{ getAbsAmount(item.amount) | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+              <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    }
+    }
+    }
   </div>
 </div>

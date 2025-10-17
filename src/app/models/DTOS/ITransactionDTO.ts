@@ -1,8 +1,8 @@
 export interface ITransactionDTO {
   balance: number;
-  description: string;
+  description?: string;
   transactionDate: Date;
-  categoryId: string;
+  categoryId?: string;
   notes: string;
   accountId?: string;
   originAccount?: string;

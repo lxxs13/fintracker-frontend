@@ -14,9 +14,17 @@ export class TransactionService {
   getTransactions(filter?: ITransactionsFilterDTO): Observable<ITransactionsListResponse> {
     let httpParams = new HttpParams();
 
-    if(filter?.startDate && filter?.endDate) {
+    if (filter?.startDate && filter?.endDate) {
       httpParams = httpParams.set('startDate', filter.startDate);
       httpParams = httpParams.set('endDate', filter.endDate);
+    }
+
+    if (filter?.accounts) {
+      httpParams = httpParams.set('accounts', filter.accounts.join(','))
+    }
+
+    if (filter?.categories) {
+      httpParams = httpParams.set('categories', filter.categories.join(','))
     }
 
     return this._http.get<ITransactionsListResponse>(`/transaction?${httpParams.toString()}`);

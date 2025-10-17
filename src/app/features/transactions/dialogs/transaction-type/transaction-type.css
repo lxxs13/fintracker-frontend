@@ -1,0 +1,19 @@
+.underline-input .p-inputnumber-input {
+  border: none;
+  border-bottom: 1px solid var(--p-surface-600);
+  border-radius: 0;
+  padding: 0.5rem 0;
+  font-size: 28px;
+  text-align: center;
+  background: transparent;
+}
+
+.underline-input .p-inputnumber-input:hover {
+  border-bottom: 1px solid var(--p-surface-500);
+}
+
+.underline-input .p-inputnumber-input:enabled:focus {
+  outline: none;
+  border-bottom-color: var(--p-primary-500);
+  box-shadow: none;
+}

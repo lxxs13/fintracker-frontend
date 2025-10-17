@@ -1,5 +1,5 @@
 import { DatePickerModule } from 'primeng/datepicker';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -38,6 +38,8 @@ import { ETransactionType } from '../../../../enums/TransactionsTypes';
     ToggleSwitchModule,
   ],
   templateUrl: './transaction-type.html',
+  styleUrl: './transaction-type.css',
+  encapsulation: ViewEncapsulation.None,
   providers: [DialogService]
 })
 export class TransactionTypeComponent implements OnInit {
@@ -53,6 +55,9 @@ export class TransactionTypeComponent implements OnInit {
   accountsGroup: any[] = [];
   selectedAccount: any;
   selectedAccountDestiny: any;
+
+  debitAccounts: any[] = [];
+  creditAccounts: any[] = [];
 
   options = this._commonService.stateOptions;
 
@@ -74,20 +79,38 @@ export class TransactionTypeComponent implements OnInit {
   ngOnInit(): void {
     this.spentDate = new Date();
     this.transactionType = this._dialogConfig.data.transactionType;
+    this.initAccountsList();
+  }
 
+  closeDialog(): void {
+    this._dialogService.close(false);
+  }
+
+  initAccountsList(): void {
     this._accountsService.GetDebitCardsByUser().subscribe({
       next: (response) => {
         const { debitAccounts, creditAccounts } = response;
 
-        this.accountsGroup.push({
-          label: 'Cuentas de débito',
-          items: debitAccounts.map((element) => element)
-        });
+        if (this.transactionType === ETransactionType.CARD_PAYMENT) {
+          this.debitAccounts = debitAccounts;
+          this.creditAccounts = creditAccounts;
 
-        this.accountsGroup.push({
-          label: 'Tarjetas de crédito',
-          items: creditAccounts.map((element) => element)
-        });
+          return;
+        }
+
+        if (debitAccounts.length > 0) {
+          this.accountsGroup.push({
+            label: 'Cuentas de débito',
+            items: debitAccounts.map((element) => element)
+          });
+        }
+
+        if (creditAccounts.length > 0) {
+          this.accountsGroup.push({
+            label: 'Tarjetas de crédito',
+            items: creditAccounts.map((element) => element)
+          });
+        }
 
         this.accountsGroup = this.accountsGroup.map(group => ({
           ...group,
@@ -100,10 +123,6 @@ export class TransactionTypeComponent implements OnInit {
     });
   }
 
-  closeDialog(): void {
-    this._dialogService.close(false);
-  }
-
   saveChanges(): void {
     switch (this.transactionType) {
       case ETransactionType.INCOME:
@@ -112,6 +131,9 @@ export class TransactionTypeComponent implements OnInit {
         break;
       case ETransactionType.TRANSFER:
         this.createTransferTransaction();
+        break;
+      case ETransactionType.CARD_PAYMENT:
+        this.createCardPaymentTransaction();
         break;
     }
   }
@@ -144,7 +166,6 @@ export class TransactionTypeComponent implements OnInit {
       balance: this.balance!,
       description: this.desc,
       transactionDate: this.spentDate!,
-      categoryId: this.selectedCategory?._id!,
       originAccount: this.selectedAccount?._id!,
       destinyAccount: this.selectedAccountDestiny._id!,
       transactionType: this.transactionType,
@@ -161,6 +182,30 @@ export class TransactionTypeComponent implements OnInit {
         console.error(err)
       }
     })
+  }
+
+  createCardPaymentTransaction(): void {
+    const body: ITransactionDTO = {
+      balance: this.balance!,
+      notes: this.notes,
+      transactionDate: this.spentDate!,
+      originAccount: this.selectedAccountDestiny,
+      destinyAccount: this.selectedAccount,
+      transactionType: this.transactionType,
+    };
+
+    this._transtactionService.createTransferTransaction(body).subscribe({
+      next: (response) => {
+        if (response) {
+          this._dialogService.close(true);
+        }
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
+
+
   }
 
   get ETransactionType(): typeof ETransactionType {

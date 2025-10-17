@@ -1,18 +1,23 @@
 <div class="flex flex-col justify-center  gap-3 !w-full">
   <div class="flex flex-col gap-4">
-    <p-float-label variant="on" class="mt-2">
-      <p-inputnumber [(ngModel)]="balance" inputId="balnce_input" mode="currency" currency="USD" locale="en-US"
-        autocomplete="off" size="large" fluid />
-      <label for="balance_input">Monto</label>
-    </p-float-label>
+    <div class="flex justify-center items-center w-full">
+      <p-float-label variant="on" class="mt-2">
+        <p-inputnumber [(ngModel)]="balance" inputId="balance_input" mode="currency" currency="USD" locale="en-US"
+          autocomplete="off" size="large" class="underline-input" fluid placeholder="$0.00" autofocus />
+        <label for="balance_input">Monto</label>
+      </p-float-label>
+    </div>
 
+    @if (transactionType !== ETransactionType.CARD_PAYMENT) {
     <p-float-label variant="on">
       <input pInputText fluid id="input_description" pSize="large" [(ngModel)]="desc" [autocomplete]="false" />
       <label for="input_description">Descripción</label>
     </p-float-label>
+    }
 
     <p-float-label variant="on">
-      <p-datepicker [(ngModel)]="spentDate" fluid dateFormat="dd/mm/yy" appendTo="body" size="large" />
+      <p-datepicker id="input_transaction_date" [(ngModel)]="spentDate" fluid dateFormat="dd/mm/yy" appendTo="body"
+        size="large" />
       @switch (transactionType) {
       @case (ETransactionType.PAYMENT) {
       <label for="input_transaction_date">Pagar antes de</label>
@@ -22,6 +27,9 @@
       }
       @case (ETransactionType.TRANSFER) {
       <label for="input_transaction_date">Fecha de transferencia</label>
+      }
+      @case (ETransactionType.CARD_PAYMENT) {
+      <label for="input_transaction_date">Fecha de pago</label>
       }
       @default {
       <label for="input_transaction_date">Fecha de transacción</label>
@@ -46,6 +54,7 @@
     </div>
     } -->
 
+    @if (transactionType !== ETransactionType.CARD_PAYMENT) {
     <p-float-label variant="on">
       <p-select id="input_account" [options]="accountsGroup" [(ngModel)]="selectedAccount" [group]="true" size="large"
         fluid>
@@ -68,6 +77,21 @@
       }
       }
     </p-float-label>
+    } @else {
+    <p-float-label variant="on">
+      <p-select id="input_account" [options]="creditAccounts" [(ngModel)]="selectedAccount" optionLabel="accountName"
+        size="large" optionValue="_id" fluid />
+      <label for="input_account">Tarjeta de crédito</label>
+    </p-float-label>
+    }
+
+    @if (transactionType === ETransactionType.CARD_PAYMENT) {
+    <p-float-label variant="on">
+      <p-select id="input_account" [options]="debitAccounts" [(ngModel)]="selectedAccountDestiny" size="large"
+        optionLabel="accountName" optionValue="_id" fluid />
+      <label for="input_account">Pagar desde</label>
+    </p-float-label>
+    }
 
     @if (transactionType === ETransactionType.TRANSFER) {
     <p-float-label variant="on">
@@ -83,17 +107,17 @@
     </p-float-label>
     }
 
-    @if (transactionType !== ETransactionType.TRANSFER) {
+    @if (transactionType !== ETransactionType.TRANSFER && transactionType !== ETransactionType.CARD_PAYMENT) {
     <fintracker-categories-list [transactionType]="transactionType"
       (selectedCategoryOutput)="selectedCategory = $event" />
     }
 
-    @if (transactionType !== ETransactionType.CARD_PAYMENT) {
+    <!-- @if (transactionType !== ETransactionType.CARD_PAYMENT) { -->
     <p-float-label variant="on">
       <textarea id="input_descripcion" rows="3" cols="30" pTextarea [(ngModel)]="notes" fluid></textarea>
       <label for="input_descripcion">Notas</label>
     </p-float-label>
-    }
+    <!-- } -->
   </div>
 
   <div

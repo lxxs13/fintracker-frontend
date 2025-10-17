@@ -65,11 +65,11 @@ export class AddEditCardAccountComponent implements OnInit {
   APR: number | undefined;
   paymentDueDay: number | undefined;
   statementCloseDay: number | undefined;
+  balance: number | undefined;
 
   description: string = '';
   action: string = '';
 
-  balance: number = 0;
   type: number = 0;
   selectedAccountType: number = 0;
 
@@ -174,14 +174,12 @@ export class AddEditCardAccountComponent implements OnInit {
   }
 
   updateDebitCard(): void {
-    if (!this.balance) return;
-
     if (!this.accountsType) return;
 
     if (!this.item?._id) return;
 
     const body: IDebitAccountDTO = {
-      balance: this.balance,
+      balance: this.balance ?? 0,
       description: this.description,
       accountType: +this.selectedAccountType
     };
@@ -201,14 +199,12 @@ export class AddEditCardAccountComponent implements OnInit {
   }
 
   updateCreditCard(): void {
-    if (!this.balance) return;
-
     if (!this.accountsType) return;
 
     if (!this.item?._id) return;
 
     const body: ICreditAccountDTO = {
-      balance: this.balance,
+      balance: this.balance ?? 0,
       description: this.description,
       accountType: +this.selectedAccountType,
       APR: this.APR!,
