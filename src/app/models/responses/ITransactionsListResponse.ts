@@ -7,10 +7,10 @@ export interface ITransactionsListResponse {
   incomeTotal:        number;
   transactionsTotal:  number;
   cardPaymentsTotal:  number;
-  transactionList:    ITransactionList[];
+  transactionList:    ITransactionItem[];
 }
 
-export interface ITransactionList {
+export interface ITransactionItem {
   _id:             string;
   categoryId:      string;
   accountId:       string;

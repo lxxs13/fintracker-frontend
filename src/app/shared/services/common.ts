@@ -58,6 +58,10 @@ export class CommonService {
     return (Math.floor((new Date).getTime() / 1000)) >= this.timeToExpire(token);
   }
 
+  getAbsAmount = (amount: number) => {
+    return Math.abs(amount)
+  }
+
   timeToExpire(token: string) {
     return (JSON.parse(atob(token.split('.')[1]))).exp;
   }
@@ -100,18 +104,18 @@ export class CommonService {
     return dates;
   }
 
-    oneMonthAgoClamped(ref: Date): Date {
-      const d = new Date(ref);
-      const day = d.getDate();
+  oneMonthAgoClamped(ref: Date): Date {
+    const d = new Date(ref);
+    const day = d.getDate();
 
-      d.setDate(1);
-      d.setMonth(d.getMonth() - 1);
+    d.setDate(1);
+    d.setMonth(d.getMonth() - 1);
 
-      const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
 
-      d.setDate(Math.min(day, lastDay));
+    d.setDate(Math.min(day, lastDay));
 
-      return d;
-    }
+    return d;
+  }
 
 }

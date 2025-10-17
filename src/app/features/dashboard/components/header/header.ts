@@ -59,11 +59,11 @@ export class HeaderComponent {
         icon: 'pi pi-replay',
         routerLink: 'transactions'
       },
-      {
-        label: 'Configuración',
-        icon: 'pi pi-cog',
-        routerLink: 'settings'
-      },
+      // {
+      //   label: 'Configuración',
+      //   icon: 'pi pi-cog',
+      //   routerLink: 'settings'
+      // },
     ]
   }
 }

@@ -18,7 +18,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { forkJoin, map, catchError, of } from 'rxjs';
 import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { TransactionService } from '../../services/transaction';
-import { ITransactionList, ITransactionsListResponse } from '../../../../models/responses/ITransactionsListResponse';
+import { ITransactionItem, ITransactionsListResponse } from '../../../../models/responses/ITransactionsListResponse';
 import { IconColorClassPipe } from '../../../../shared/pipes/icon-color-class-pipe';
 import { CategoriesService } from '../../../settings/services/categories';
 import { AccountService } from '../../../accounts/services/account';
@@ -57,11 +57,12 @@ export class Transaction implements OnDestroy, OnInit {
   private _transactionService = inject(TransactionService);
   private _categoriesServices = inject(CategoriesService);
   private _accountsService = inject(AccountService);
-  private _commonService = inject(CommonService)
+
+  commonService = inject(CommonService)
 
   dialogRef: DynamicDialogRef | undefined;
 
-  transactionList: ITransactionList[] = [];
+  transactionList: ITransactionItem[] = [];
 
   categoriesFilter: ICategories[] = []
   categoryFilterSelected: any;
@@ -93,7 +94,7 @@ export class Transaction implements OnDestroy, OnInit {
     this.initTransacionTypesList();
 
     const today = new Date();
-    const start = this._commonService.oneMonthAgoClamped(today);
+    const start = this.commonService.oneMonthAgoClamped(today);
 
     this.rangeDates = [start, today];
   }
@@ -102,12 +103,8 @@ export class Transaction implements OnDestroy, OnInit {
     if (this.dialogRef) this.dialogRef.close();
   }
 
-  getAbsAmount = (amount: number) => {
-    return Math.abs(amount)
-  }
-
   initTransacionTypesList(): void {
-    this._commonService.stateOptions.forEach(option => {
+    this.commonService.stateOptions.forEach(option => {
       this.transactionItems.push({
         desc: option.desc,
         icon: option.icon,
@@ -216,14 +213,14 @@ export class Transaction implements OnDestroy, OnInit {
 
     this.dialogRef.onClose.subscribe((response) => {
       if (response) {
-        this._commonService.showMessage('Transacción creada', 'La transacción se ha gaurdado correctamente', 'OK');
+        this.commonService.showMessage('Transacción creada', 'La transacción se ha gaurdado correctamente', 'OK');
         this.getTransactionsList();
       }
     })
   }
 
   filterData(): void {
-    const { startDate, endDate } = this._commonService.getDates(this.rangeDates);
+    const { startDate, endDate } = this.commonService.getDates(this.rangeDates);
 
     const filters: ITransactionsFilterDTO = {
       startDate,
