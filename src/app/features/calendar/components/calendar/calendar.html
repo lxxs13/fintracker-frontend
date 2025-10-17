@@ -5,10 +5,10 @@
     </div>
   </p-card>
 
-  <div class="flex flex-row w-full gap-4">
+  <div class="flex flex-row h-[600px] w-full gap-2">
     <p-datepicker [(ngModel)]="date" [inline]="true" view="date" (onMonthChange)="updateLastDay($event)"
-      [showOtherMonths]="false" [firstDayOfWeek]="1" (onSelect)="filterListBySelectedDay($event)"
-      showButtonBar (onTodayClick)="resetList()" (onClearClick)="reInitDate()">
+      [showOtherMonths]="false" [firstDayOfWeek]="1" (onSelect)="filterListBySelectedDay($event)" showButtonBar
+      (onTodayClick)="resetList()" (onClearClick)="reInitDate()" class="w-full flex-1">
       <ng-template pTemplate="day" let-item class="!rounded-none">
         <div class="flex flex-col w-full gap-1 items-center">
           <p-card class="!h-full !w-full">
@@ -18,84 +18,107 @@
                   {{item.day}}
                 </span>
               </div>
-
             </ng-template>
 
-            <span class="text-[var(--p-surface-400)] p-0 m-0"> {{ totalForCell(item) |
-              currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
-
+            <span class="text-[var(--p-surface-400)] p-0 m-0">
+              @if (totalForCell(item) !== 0) {
+              {{ totalForCell(item) | currency:'USD':'symbol':'1.2-2':'en-US' }}
+              }
+            </span>
           </p-card>
         </div>
       </ng-template>
     </p-datepicker>
 
-    <div class="flex flex-col w-full gap-4">
-      <p-card>
-        <p-accordion value="">
-          <p-accordion-panel value="0">
-            <p-accordion-header>
-              <div class="flex flex-col gap-2 w-full">
-                <span>Balance al</span>
-                <span> {{ lastDayOfMonth | date:'dd/MMMM/yyyy' : 'es-MX' }}</span>
-              </div>
+    <div class="flex flex-col gap-2 w-full h-full overflow-y-auto flex-1">
+      @for (item of transactionList; track item._id) {
+      <p-card class="flex flex-col gap-4 justify-start items-center !h-fit">
+        <ng-template #header>
+          <div class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm">
+            <p class="pl-2 p-1">{{ item.transactionDate | date: 'longDate'}}</p>
+          </div>
+        </ng-template>
 
-              <div class="flex flex-col gap-2 w-full">
-                <span>Cuentas</span>
-                <span>{{ 0 | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
-              </div>
+        <div class="flex flex-row gap-4 items-center">
+          <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.category.iconColor | iconColorClass">
+            {{ item.category.iconLabel }}
+          </span>
 
-              <div class="flex flex-col gap-2 w-full">
-                <span>Tarjetas de crédito</span>
-                <span>{{ 0 | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
-              </div>
-            </p-accordion-header>
-
-            <p-accordion-content>
-              <p class="m-0">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore
-                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-                id
-                est
-                laborum.
-              </p>
-            </p-accordion-content>
-          </p-accordion-panel>
-        </p-accordion>
-      </p-card>
-
-      <div class="flex flex-col gap-2">
-        @for (item of transactionList; track item._id) {
-        <p-card class="flex flex-col gap-4 w-full justify-start items-center !h-min">
-          <ng-template #header>
-            <div class="w-full bg-[var(--p-surface-800)] rounded-tr-sm rounded-tl-sm">
-              <p class="pl-2 p-1">{{ item.transactionDate | date: 'longDate'}}</p>
+          <div class="flex flex-row justify-between items-center w-full gap-4">
+            <div>
+              <p class="text-base">{{ item.description }}</p>
+              <p class="text-xs font-extralight">{{ item.account.accountName }}</p>
             </div>
-          </ng-template>
 
-          <div class="flex flex-row gap-4 items-center">
-            <span class="material-symbols-outlined rounded-md p-2" [ngClass]="item.category.iconColor | iconColorClass">
-              {{ item.category.iconLabel }}
-            </span>
-
-            <div class="flex flex-row justify-between items-center w-full gap-4">
-              <div>
-                <p class="text-base">{{ item.description }}</p>
-                <p class="text-xs font-extralight">{{ item.account.accountName }}</p>
-              </div>
-
-              <div class="flex flex-col justify-end items-end">
-                <p class="text-base"> {{ item.amount | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
-                <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
-              </div>
+            <div class="flex flex-col justify-end items-end">
+              <p class="text-base">
+                {{ commonService.getAbsAmount(item.amount)| currency:'USD':'symbol':'1.2-2':'en-US' }}
+              </p>
+              <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
             </div>
           </div>
-        </p-card>
-        }
-      </div>
+        </div>
+      </p-card>
+      }
     </div>
   </div>
+
+  <!-- <div class="flex flex-col w-full gap-4">
+    <p-card>
+      <p-accordion value="">
+        <p-accordion-panel value="0">
+          <p-accordion-header>
+            <div class="flex flex-col gap-2 w-full">
+              <span>Balance al</span>
+              <span> {{ lastDayOfMonth | date:'dd/MMMM/yyyy' : 'es-MX' }}</span>
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+              <span>Cuentas</span>
+              <span>{{ accountsBalanceTotal | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
+            </div>
+
+            <div class="flex flex-col gap-2 w-full">
+              <span>Tarjetas de crédito</span>
+              <span>{{ creditCardsBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}</span>
+            </div>
+          </p-accordion-header>
+
+           <p-accordion-content>
+            <h3>Cuentas de débito</h3>
+            <div class="flex flex-col w-full">
+              @for (item of debitAccounts; track item._id) {
+              <div class="flex flex-row justify-between items-center">
+                <p class="ml-3">
+                  {{ item.accountName }}
+                </p>
+
+                <p>
+                  {{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}
+                </p>
+              </div>
+              }
+            </div>
+
+            <h3>Cuentas de crédito</h3>
+            <div class="flex flex-col w-full">
+              @for (item of creditAccounts; track item._id) {
+              <div class="flex flex-row justify-between items-center">
+                <p class="ml-3">
+                  {{ item.accountName }}
+                </p>
+
+                <p>
+                  {{ item.currentBalance | currency:'USD':'symbol':'1.2-2':'en-US' }}
+                </p>
+              </div>
+              }
+            </div>
+
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
+    </p-card>
+ </div> -->
+
 </div>

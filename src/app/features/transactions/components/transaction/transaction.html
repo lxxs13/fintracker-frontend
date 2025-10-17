@@ -68,7 +68,8 @@
       </p-float-label>
 
 
-      <p-button label="Filtrar" icon="pi pi-search" severity="secondary" variant="outlined" (onClick)="filterData()" fluid class="w-full md:w-min"/>
+      <p-button label="Filtrar" icon="pi pi-search" severity="secondary" variant="outlined" (onClick)="filterData()"
+        fluid class="w-full md:w-min" />
     </div>
   </p-card>
 
@@ -155,7 +156,7 @@
             <div class="flex flex-col">
               <p class="text-base" [ngClass]="{ 'text-green-300': (item.amount > 0 || (item.amount < 0 && item.account.accountType === 4))  ,
                 'text-red-300': (item.amount < 0 &&  item.account.accountType !== 4)}">
-                {{ getAbsAmount(item.amount) | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
+                {{ commonService.getAbsAmount(item.amount) | currency:'USD':'symbol':'1.2-2':'en-US' }} </p>
               <p class="text-xs font-extralight"> {{ item.balance | currency:'USD':'symbol':'1.2-2':'en-US' }}</p>
             </div>
           </div>
