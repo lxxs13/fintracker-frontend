@@ -3,12 +3,12 @@ import { canAccessGuard } from './core/guards/can-access-guard';
 
 export const routes: Routes = [
   {
-    title: 'Iniciar Sesión',
+    title: 'FinTracker | Iniciar Sesión',
     path: '',
     loadComponent: () => import('./core/auth/pages/login/login').then(c => c.LoginPage),
   },
   {
-    title: 'Dashboard',
+    title: 'FinTracker | Dashboard',
     path: 'dashboard',
     canActivate: [canAccessGuard],
     canActivateChild: [canAccessGuard],
@@ -20,22 +20,26 @@ export const routes: Routes = [
       },
       {
         path: 'calendar',
-        title: 'Calendario',
+        title: 'FinTracker | Calendario',
         loadComponent: () => import('./features/calendar/pages/calendar/calendar').then(c => c.CalendarPage),
       },
       {
+        title: 'FinTracker | Reportes',
         path: 'reports',
         loadComponent: () => import('./features/reports/pages/reports/reports').then(c => c.ReportsPage),
       },
       {
+        title: 'FinTracker | Cuentas',
         path: 'accounts',
         loadComponent: () => import('./features/accounts/pages/account/account').then(c => c.AccountPage),
       },
       {
+        title: 'FinTracker | Transacciones',
         path: 'transactions',
         loadComponent: () => import('./features/transactions/pages/transaction/transaction').then(c => c.TransactionPage),
       },
       {
+        title: 'FinTracker | Configuración',
         path: 'settings',
         loadComponent: () => import('./features/settings/pages/settings/settings').then(c => c.SettingsPage),
         children: [

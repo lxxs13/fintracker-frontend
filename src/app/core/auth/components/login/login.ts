@@ -26,7 +26,6 @@ import { AuthService } from '../../services/auth';
     CommonModule,
   ],
   templateUrl: './login.html',
-  styleUrl: './login.css'
 })
 export class Login {
   @Output() goToRegister: EventEmitter<number> = new EventEmitter<number>();

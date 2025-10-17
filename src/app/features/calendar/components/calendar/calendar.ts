@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -29,7 +29,8 @@ interface Tx {
     IconColorClassPipe,
   ],
   templateUrl: './calendar.html',
-  styleUrl: './calendar.css'
+  styleUrl: './calendar.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class CalendarComponent implements OnInit {
   private _transactionService = inject(TransactionService);
@@ -61,9 +62,9 @@ export class CalendarComponent implements OnInit {
 
     const filters: ITransactionsFilterDTO = { startDate, endDate };
 
-    this._transactionService.GetTransactions(filters).subscribe({
+    this._transactionService.getTransactions(filters).subscribe({
       next: (response) => {
-        const { total, spentTotal, transactionList } = response;
+        const { spentTotal, transactionList } = response;
         // this.totalTrasactions = total;
         // this.totalSpent = spentTotal;
         this.transactionList = transactionList;

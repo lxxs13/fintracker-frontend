@@ -16,7 +16,7 @@ export class CommonService {
     { icon: 'pi-arrow-right-arrow-left', label: 'Transferencia', value: 4, desc: 'Registra movimientos entre cuentas, como transferencia de cuenta de cheques a ahorro.' },
     // { icon: 'pi-arrow-circle-left', label: 'Reembolso', value: 5, desc: 'Registra un reembolso o una devolución que recibiste, como la devolución de un producto o cashback.' },
     // { icon: 'pi-list-check', label: 'Compra a meses', value: 6, desc: 'Registra una compra a meses con tarjeta de crédito.' },
-    // { icon: 'pi-credit-card', label: 'Pago de tarjeta', value: 7, desc: 'Registra un pago realizado a tu tarjeta de crédito.' },
+    { icon: 'pi-credit-card', label: 'Pago de tarjeta', value: 7, desc: 'Registra un pago realizado a tu tarjeta de crédito.' },
   ];
 
   periods = [
@@ -68,7 +68,7 @@ export class CommonService {
       severity: status === 'OK' ? 'success' : 'error',
       summary,
       detail,
-      life: 5000,
+      life: status === 'OK' ? 3000 : 5000,
       styleClass: 'p-toast-message-success'
     });
   }
@@ -99,5 +99,19 @@ export class CommonService {
 
     return dates;
   }
+
+    oneMonthAgoClamped(ref: Date): Date {
+      const d = new Date(ref);
+      const day = d.getDate();
+
+      d.setDate(1);
+      d.setMonth(d.getMonth() - 1);
+
+      const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+
+      d.setDate(Math.min(day, lastDay));
+
+      return d;
+    }
 
 }

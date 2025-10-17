@@ -13,6 +13,8 @@ import { MenuModule } from 'primeng/menu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { forkJoin, map, catchError, of } from 'rxjs';
 import { TransactionTypeComponent } from '../../dialogs/transaction-type/transaction-type';
 import { TransactionService } from '../../services/transaction';
@@ -24,6 +26,7 @@ import { CommonService } from '../../../../shared/services/common';
 import { ICategories } from '../../../../models/responses/ICategoriesListResponse';
 import { IAccount } from '../../../../models/responses/IDebitAccountsResponse';
 import { DataNotFoundComponent } from "../../../../shared/components/data-not-found/data-not-found";
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'fintracker-transaction-component',
@@ -39,9 +42,12 @@ import { DataNotFoundComponent } from "../../../../shared/components/data-not-fo
     MenuModule,
     TooltipModule,
     SkeletonModule,
+    SelectModule,
+    MultiSelectModule,
+    FloatLabelModule,
     IconColorClassPipe,
-    DataNotFoundComponent
-],
+    DataNotFoundComponent,
+  ],
   templateUrl: './transaction.html',
   styleUrl: './transaction.css',
   providers: [DialogService]
@@ -60,12 +66,6 @@ export class Transaction implements OnDestroy, OnInit {
   categoriesFilter: ICategories[] = []
   categoryFilterSelected: any;
 
-  debitAccountsFilter: IAccount[] = []
-  debitAccountSelected: any;
-
-  creditAccoutsFilter: IAccount[] = []
-  creditAccountSelected: any;
-
   transactionTypes: any[] = [];
 
   rangeDates: Date[] = [];
@@ -74,13 +74,18 @@ export class Transaction implements OnDestroy, OnInit {
 
   totalTrasactions: number = 0;
   totalSpent: number = 0;
+  cardPaymentsTotal: number = 0;
+  transactionsTotal: number = 0;
   totalIncome: number = 0;
 
   isLoading: boolean = false;
 
   transactionItems: MenuItem[] = [];
 
-  dataNotFoundMessage: string = 'No se encontraron '
+  accountsGroup: any[] = [];
+  selectedAccount: any;
+
+  defaultDate: Date = new Date();
 
   ngOnInit(): void {
     this.getFilters();
@@ -88,7 +93,7 @@ export class Transaction implements OnDestroy, OnInit {
     this.initTransacionTypesList();
 
     const today = new Date();
-    const start = this.oneMonthAgoClamped(today);
+    const start = this._commonService.oneMonthAgoClamped(today);
 
     this.rangeDates = [start, today];
   }
@@ -120,10 +125,20 @@ export class Transaction implements OnDestroy, OnInit {
 
     this._transactionService.getTransactions(filter).subscribe({
       next: (response: ITransactionsListResponse) => {
-        const { totalDocuments: total, spentTotal, incomeTotal: totalIncome, transactionList } = response;
-        this.totalTrasactions = total;
+        const {
+          totalDocuments,
+          spentTotal,
+          incomeTotal,
+          cardPaymentsTotal,
+          transactionsTotal,
+          transactionList
+        } = response;
+
+        this.totalTrasactions = totalDocuments;
         this.totalSpent = spentTotal;
-        this.totalIncome = totalIncome;
+        this.totalIncome = incomeTotal;
+        this.cardPaymentsTotal = cardPaymentsTotal;
+        this.transactionsTotal = transactionsTotal;
         this.transactionList = transactionList;
       },
       error: (err) => {
@@ -145,12 +160,31 @@ export class Transaction implements OnDestroy, OnInit {
         const creditAccounts: IAccount[] = accounts?.creditAccounts ?? [];
         const categoriesIncome: ICategories[] = categories?.categoriesIncome ?? [];
         const categoriesSpent: ICategories[] = categories?.categoriesSpent ?? [];
+        const otherCategories: ICategories[] = categories.othersCategories ?? [];
 
-        this.categoriesFilter = [...categoriesSpent, ...categoriesIncome];
+        if (debitAccounts.length > 0) {
+          this.accountsGroup.push({
+            label: 'Cuentas de débito',
+            items: debitAccounts.map((element) => element)
+          });
+        }
 
-        this.debitAccountsFilter = debitAccounts;
-        this.creditAccoutsFilter = creditAccounts;
+        if (creditAccounts.length > 0) {
+          this.accountsGroup.push({
+            label: 'Tarjetas de crédito',
+            items: creditAccounts.map((element) => element)
+          });
+        }
 
+        this.accountsGroup = this.accountsGroup.map(group => ({
+          ...group,
+          items: group.items.map(({ accountName, ...rest }: any) => ({
+            ...rest,
+            label: accountName
+          }))
+        }));
+
+        this.categoriesFilter = [...categoriesSpent, ...categoriesIncome, ...otherCategories];
       }),
       catchError(() => {
         return of([]);
@@ -167,6 +201,14 @@ export class Transaction implements OnDestroy, OnInit {
       draggable: true,
       width: '50rem',
       header: 'Agregar transacción',
+      resizable: true,
+      breakpoints: {
+        // '320px': '98%',
+        // '375px': '90%',
+        // '425px': '90%',
+        '768px': '90%',
+        '1024px': '90vw'
+      },
       data: {
         transactionType: this.transactionTypeSelected
       },
@@ -180,27 +222,15 @@ export class Transaction implements OnDestroy, OnInit {
     })
   }
 
-  oneMonthAgoClamped(ref: Date): Date {
-    const d = new Date(ref);
-    const day = d.getDate();
-
-    d.setDate(1);
-    d.setMonth(d.getMonth() - 1);
-
-    const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-
-    d.setDate(Math.min(day, lastDay));
-
-    return d;
-  }
-
   filterData(): void {
     const { startDate, endDate } = this._commonService.getDates(this.rangeDates);
 
     const filters: ITransactionsFilterDTO = {
       startDate,
       endDate,
-    }
+      accounts: this.selectedAccount,
+      categories: this.categoryFilterSelected,
+    };
 
     this.getTransactionsList(filters);
   }
